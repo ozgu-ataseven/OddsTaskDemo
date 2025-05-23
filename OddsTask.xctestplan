@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "BD2D4858-1086-4B57-BB62-E176ACD17F43",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-FIRDebugEnabled"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OddsTask.xcodeproj",
+      "identifier" : "B92568462DD797AE00F1956B",
+      "name" : "OddsTask"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:OddsTask.xcodeproj",
+        "identifier" : "B9D13E822DE0033800CFC1CC",
+        "name" : "OddsTaskTests"
+      }
+    }
+  ],
+  "version" : 1
+}

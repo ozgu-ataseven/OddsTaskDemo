@@ -1,0 +1,48 @@
+/* 
+  Localizable.strings
+  OddsTask
+
+  Created by Özgü Ataseven on 22.05.2025.
+  
+*/
+
+//LoginView
+"login_button" = "Login";
+"login_register" = "Register";
+"login_reminder" = "Don't have an account yet?";
+"login_error_desc" = "Email and password cannot be empty";
+"login_password_valid" = "Password must be at least 6 characters long";
+
+//RegisterView
+"register_name" = "Name Surname";
+"register_privacy" = "I have read and accept the privacy policy";
+"register_allready" = "This email is already in use";
+"register_connect" = "Please check your internet connection";
+"register_failed" = "Failed to register";
+"register_empty_name" = "Name and surname cannot be empty.";
+"register_password_failed" = "Your passwords do not match.";
+
+//OddEventListView
+"odds_title" = "All Odds";
+"odds_search" = "Find Match";
+"odds_data_not_found" = "Odds data not found";
+
+//Event
+"event_title" = "Event Detail";
+
+//SportListView
+"sports_search" = "Find Sport";
+"sports_no_result" = "No results found for the sport you searched.";
+"sports_all" = "All Sports";
+"sports_update" = "Last updated:";
+
+//General
+"general_email" = "Email";
+"general_empty_mail" = "Email cannot be empty";
+"general_invalid_mail" = "Invalid email address";
+"general_password" = "Password";
+"general_confirm_password" = "Confirm password";
+"general_register" = "Register";
+"general_done" = "Ok";
+"general_error" = "Error";
+"general_not_found" = "No results found";

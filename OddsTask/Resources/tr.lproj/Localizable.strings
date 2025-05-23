@@ -1,0 +1,47 @@
+/* 
+  Localizable.strings
+  OddsTask
+
+  Created by Özgü Ataseven on 22.05.2025.
+  
+*/
+
+//LoginView
+"login_button" = "Giriş Yap";
+"login_reminder" = "Hala hesabın yok mu?";
+"login_error_desc" = "Email ve şifre boş olamaz";
+"login_password_valid" = "Şifre en az 6 karakter olmalı";
+
+//RegisterView
+"register_name" = "Ad Soyad";
+"register_privacy" = "Gizlilik sözleşmesini okudum ve kabul ediyorum.";
+"register_allready" = "Bu email adresi zaten kayıtlı";
+"register_connect" = "Lütfen internet bağlantınızı kontrol edin";
+"register_failed" = "Kayıt Başarısız";
+"register_empty_name" = "Ad Soyad boş olamaz.";
+"register_password_failed" = "Şifreleriniz uyuşmuyor.";
+
+//OddEventListView
+"odds_title" = "Tüm Oranlar";
+"odds_search" = "Maç Ara";
+"odds_data_not_found" = "Oran verisi bulunamadı.";
+
+//Event
+"event_title" = "Etkinlik Detayı";
+
+//SportListView
+"sports_search" = "Spor Ara";
+"sports_no_result" = "Aradığınız spor türü bulunamadı.";
+"sports_all" = "Tüm Sporlar";
+"sports_update" = "Son güncelleme:";
+
+//General
+"general_email" = "Email";
+"general_empty_mail" = "Email alanı boş olamaz";
+"general_invalid_mail" = "Geçersiz email adresi";
+"general_password" = "Şifre";
+"general_confirm_password" = "Şifrenizi tekrar giriniz.";
+"general_register" = "Kayıt Ol";
+"general_done" = "Tamam";
+"general_error" = "Hata";
+"general_not_found" = "Sonuç bulunamadı";
