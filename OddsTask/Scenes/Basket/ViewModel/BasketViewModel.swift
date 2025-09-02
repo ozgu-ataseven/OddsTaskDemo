@@ -12,7 +12,6 @@ final class BasketViewModel: BasketViewModelProtocol {
     
     @Published private var isLoading: Bool = false
     
-    private let dependencyContainer: DependencyContainer
     private let basketService: BasketServiceProtocol
     private let authService: AuthenticationServiceProtocol
     
@@ -48,11 +47,9 @@ final class BasketViewModel: BasketViewModelProtocol {
     
     // MARK: - Init
     init(
-        dependencyContainer: DependencyContainer,
         authService: AuthenticationServiceProtocol,
         basketService: BasketServiceProtocol
     ) {
-        self.dependencyContainer = dependencyContainer
         self.basketService = basketService
         self.authService = authService
         fetchBasketItems()

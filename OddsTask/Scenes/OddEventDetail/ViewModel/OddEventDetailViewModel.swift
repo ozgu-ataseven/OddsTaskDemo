@@ -43,15 +43,17 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
 
     // MARK: - Init
     init(
-        dependencyContainer: DependencyContainer,
+        apiService: OddsAPIServiceProtocol,
+        basketService: BasketServiceProtocol,
+        authService: AuthenticationServiceProtocol,
         sportKey: String,
         eventId: String
     ) {
-        self.service = dependencyContainer.apiService
+        self.service = apiService
+        self.basketService = basketService
+        self.authService = authService
         self.sportKey = sportKey
         self.eventId = eventId
-        self.basketService = dependencyContainer.basketService
-        self.authService = dependencyContainer.authService
     }
 
     // MARK: - Fetch

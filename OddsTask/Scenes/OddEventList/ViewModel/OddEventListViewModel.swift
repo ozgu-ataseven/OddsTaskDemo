@@ -46,9 +46,9 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     private let alertSubject = PassthroughSubject<Alert, Never>()
 
     // MARK: - Init
-    init(dependencyContainer: DependencyContainer, sportKey: String) {
+    init(apiService: OddsAPIServiceProtocol, sportKey: String) {
         self.sportKey = sportKey
-        self.service = dependencyContainer.apiService
+        self.service = apiService
         bindSearch()
     }
 
@@ -95,8 +95,7 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     private func presentMissingTeamAlert() {
 
         let alertAction = AlertAction(
-            title: "Tamam",
-            action: AppRouter.shared.pop()
+            title: "Tamam"
         )
         
         let alert = Alert(

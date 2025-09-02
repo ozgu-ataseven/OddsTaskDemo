@@ -23,12 +23,14 @@ final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
         eventId: String
     ) -> UIViewController {
         let viewModel = OddEventDetailViewModel(
-            dependencyContainer: dependencyContainer,
+            apiService: dependencyContainer.apiService,
+            basketService: dependencyContainer.basketService,
+            authService: dependencyContainer.authService,
             sportKey: sportKey,
             eventId: eventId
         )
-            
-        let viewController = OddEventDetailViewController(viewModel: viewModel)
+        
+        let viewController = OddEventDetailViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }

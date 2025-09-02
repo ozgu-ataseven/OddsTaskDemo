@@ -11,10 +11,12 @@ import Combine
 final class RegisterViewController: BaseViewController<RegisterView> {
 
     private let viewModel: RegisterViewModelProtocol
+    private let router: RouterProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: RegisterViewModelProtocol) {
+    init(viewModel: RegisterViewModelProtocol, router: RouterProtocol) {
         self.viewModel = viewModel
+        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -94,8 +96,8 @@ final class RegisterViewController: BaseViewController<RegisterView> {
             .store(in: &cancellables)
         
         viewModel.routeSportListPublisher
-            .sink {
-                AppRouter.shared.setRoot(for: .sportList)
+            .sink { [weak self] in
+                self?.router.setRoot(for: .sportList, animated: true)
             }
             .store(in: &cancellables)
         

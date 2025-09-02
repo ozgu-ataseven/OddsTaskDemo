@@ -21,8 +21,8 @@ final class BasketFactory: BasketFactoryProtocol {
     func makBasketViewController() -> UIViewController {
         let authService = AuthenticationService()
         let basketService = BasketService()
-        let viewModel = BasketViewModel(dependencyContainer: dependencyContainer, authService: authService, basketService: basketService)
-        let viewController = BasketViewController(viewModel: viewModel)
+        let viewModel = BasketViewModel(authService: authService, basketService: basketService)
+        let viewController = BasketViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }

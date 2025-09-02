@@ -12,11 +12,13 @@ final class OddEventDetailViewController: BaseViewController<OddEventDetailView>
 
     // MARK: - Properties
     private let viewModel: OddEventDetailViewModelProtocol
+    private let router: RouterProtocol
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
-    init(viewModel: OddEventDetailViewModelProtocol) {
+    init(viewModel: OddEventDetailViewModelProtocol, router: RouterProtocol) {
         self.viewModel = viewModel
+        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,7 +63,7 @@ final class OddEventDetailViewController: BaseViewController<OddEventDetailView>
             .receive(on: RunLoop.main)
             .sink { [weak self] in
                 guard let self else { return }
-                AppRouter.shared.present(.basket, from: self)
+                router.present(.basket, from: self, animated: true)
             }
             .store(in: &cancellables)
     }

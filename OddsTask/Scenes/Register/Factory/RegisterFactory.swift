@@ -20,8 +20,8 @@ final class RegisterFactory: RegisterFactoryProtocol {
 
     func makeRegisterViewController() -> UIViewController {
         let authService: AuthenticationServiceProtocol = AuthenticationService()
-        let viewModel = RegisterViewModel(dependencyContainer: dependencyContainer, authService: authService)
-        let viewController = RegisterViewController(viewModel: viewModel)
+        let viewModel = RegisterViewModel(authService: authService)
+        let viewController = RegisterViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }

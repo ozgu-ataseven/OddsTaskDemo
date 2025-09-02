@@ -19,8 +19,8 @@ final class LoginFactory: LoginFactoryProtocol {
     }
 
     func makeLoginViewController() -> UIViewController {
-        let viewModel = LoginViewModel(dependencyContainer: dependencyContainer)
-        let viewController = LoginViewController(viewModel: viewModel)
+        let viewModel = LoginViewModel(authService: dependencyContainer.authService, analyticsService: dependencyContainer.analyticsService)
+        let viewController = LoginViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }

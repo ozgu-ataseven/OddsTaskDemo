@@ -19,8 +19,8 @@ final class OddEventListFactory: OddEventListFactoryProtocol {
     }
 
     func makeOddEventListViewController(sportKey: String) -> UIViewController {
-        let viewModel = OddEventListViewModel(dependencyContainer: dependencyContainer, sportKey: sportKey)
-        let viewController = OddEventListViewController(viewModel: viewModel)
+        let viewModel = OddEventListViewModel(apiService: dependencyContainer.apiService, sportKey: sportKey)
+        let viewController = OddEventListViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }

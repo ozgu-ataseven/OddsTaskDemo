@@ -10,7 +10,6 @@ import Combine
 
 final class RegisterViewModel: RegisterViewModelProtocol {
     
-    private let dependencyContainer: DependencyContainer
     private let authService: AuthenticationServiceProtocol
     private let routeSportListSubject = PassthroughSubject<Void, Never>()
     
@@ -64,8 +63,7 @@ final class RegisterViewModel: RegisterViewModelProtocol {
 
     // MARK: - Initialization
     
-    init(dependencyContainer: DependencyContainer, authService: AuthenticationServiceProtocol) {
-        self.dependencyContainer = dependencyContainer
+    init(authService: AuthenticationServiceProtocol) {
         self.authService = authService
         setupValidation()
     }

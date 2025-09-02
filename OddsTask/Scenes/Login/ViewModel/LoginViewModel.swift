@@ -10,7 +10,6 @@ import Combine
 
 final class LoginViewModel: LoginViewModelProtocol {
 
-    private let dependencyContainer: DependencyContainer
     private let authService: AuthenticationServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
     private let routeSportListSubject = PassthroughSubject<Void, Never>()
@@ -52,10 +51,9 @@ final class LoginViewModel: LoginViewModelProtocol {
     }
 
     // MARK: - Initialization
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
-        self.authService = dependencyContainer.authService
-        self.analyticsService = dependencyContainer.analyticsService
+    init(authService: AuthenticationServiceProtocol, analyticsService: AnalyticsServiceProtocol) {
+        self.authService = authService
+        self.analyticsService = analyticsService
         setupValidation()
     }
 
