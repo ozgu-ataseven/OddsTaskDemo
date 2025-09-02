@@ -12,19 +12,21 @@ protocol OddEventListFactoryProtocol {
 }
 
 final class OddEventListFactory: OddEventListFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let apiService: OddsAPIServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(apiService: OddsAPIServiceProtocol, router: RouterProtocol) {
+        self.apiService = apiService
+        self.router = router
     }
 
     func makeOddEventListViewController(sportKey: String) -> UIViewController {
         let viewModel = OddEventListViewModel(
-            apiService: dependencyContainer.apiService,
+            apiService: apiService,
             sportKey: sportKey,
             searchFilter: ContainsOddsSearchFiltering()
         )
-        let viewController = OddEventListViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewController = OddEventListViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }

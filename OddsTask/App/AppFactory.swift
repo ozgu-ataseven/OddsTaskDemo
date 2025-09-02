@@ -12,12 +12,35 @@ final class AppFactory {
 
     private let dependencyContainer: DependencyContainer
 
-    private lazy var loginFactory = LoginFactory(dependencyContainer: dependencyContainer)
-    private lazy var registerFactory = RegisterFactory(dependencyContainer: dependencyContainer)
-    private lazy var sportListFactory = SportListFactory(dependencyContainer: dependencyContainer)
-    private lazy var oddEventListFactory = OddEventListFactory(dependencyContainer: dependencyContainer)
-    private lazy var oddEventDetailFactory = OddEventDetailFactory(dependencyContainer: dependencyContainer)
-    private lazy var basketFactory = BasketFactory(dependencyContainer: dependencyContainer)
+    private lazy var loginFactory = LoginFactory(
+        authService: dependencyContainer.authService,
+        analyticsService: dependencyContainer.analyticsService,
+        router: AppRouter.shared
+    )
+    private lazy var registerFactory = RegisterFactory(
+        authService: dependencyContainer.authService,
+        router: AppRouter.shared
+    )
+    private lazy var sportListFactory = SportListFactory(
+        apiService: dependencyContainer.apiService,
+        authService: dependencyContainer.authService,
+        router: AppRouter.shared
+    )
+    private lazy var oddEventListFactory = OddEventListFactory(
+        apiService: dependencyContainer.apiService,
+        router: AppRouter.shared
+    )
+    private lazy var oddEventDetailFactory = OddEventDetailFactory(
+        apiService: dependencyContainer.apiService,
+        basketService: dependencyContainer.basketService,
+        authService: dependencyContainer.authService,
+        router: AppRouter.shared
+    )
+    private lazy var basketFactory = BasketFactory(
+        authService: dependencyContainer.authService,
+        basketService: dependencyContainer.basketService,
+        router: AppRouter.shared
+    )
 
     init(dependencyContainer: DependencyContainer) {
         self.dependencyContainer = dependencyContainer

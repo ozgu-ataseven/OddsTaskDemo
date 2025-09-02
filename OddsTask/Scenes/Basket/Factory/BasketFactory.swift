@@ -12,17 +12,19 @@ protocol BasketFactoryProtocol {
 }
 
 final class BasketFactory: BasketFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let authService: AuthenticationServiceProtocol
+    private let basketService: BasketServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
+        self.authService = authService
+        self.basketService = basketService
+        self.router = router
     }
 
     func makBasketViewController() -> UIViewController {
-        let authService = AuthenticationService()
-        let basketService = BasketService()
         let viewModel = BasketViewModel(authService: authService, basketService: basketService)
-        let viewController = BasketViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewController = BasketViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }

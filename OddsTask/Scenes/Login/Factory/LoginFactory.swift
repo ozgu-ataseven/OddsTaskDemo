@@ -12,15 +12,19 @@ protocol LoginFactoryProtocol {
 }
 
 final class LoginFactory: LoginFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let authService: AuthenticationServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(authService: AuthenticationServiceProtocol, analyticsService: AnalyticsServiceProtocol, router: RouterProtocol) {
+        self.authService = authService
+        self.analyticsService = analyticsService
+        self.router = router
     }
 
     func makeLoginViewController() -> UIViewController {
-        let viewModel = LoginViewModel(authService: dependencyContainer.authService, analyticsService: dependencyContainer.analyticsService)
-        let viewController = LoginViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewModel = LoginViewModel(authService: authService, analyticsService: analyticsService)
+        let viewController = LoginViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }

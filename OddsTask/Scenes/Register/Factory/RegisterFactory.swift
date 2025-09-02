@@ -12,16 +12,17 @@ protocol RegisterFactoryProtocol {
 }
 
 final class RegisterFactory: RegisterFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let authService: AuthenticationServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+        self.authService = authService
+        self.router = router
     }
 
     func makeRegisterViewController() -> UIViewController {
-        let authService: AuthenticationServiceProtocol = AuthenticationService()
         let viewModel = RegisterViewModel(authService: authService)
-        let viewController = RegisterViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewController = RegisterViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }

@@ -12,19 +12,23 @@ protocol SportListFactoryProtocol {
 }
 
 final class SportListFactory: SportListFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let apiService: OddsAPIServiceProtocol
+    private let authService: AuthenticationServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+        self.apiService = apiService
+        self.authService = authService
+        self.router = router
     }
 
     func makeSportListViewController() -> UIViewController {
         let viewModel = SportListViewModel(
-            apiService: dependencyContainer.apiService,
-            authService: dependencyContainer.authService,
+            apiService: apiService,
+            authService: authService,
             searchFilter: ContainsSportsSearchFiltering()
         )
-        let viewController = SportListViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewController = SportListViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }

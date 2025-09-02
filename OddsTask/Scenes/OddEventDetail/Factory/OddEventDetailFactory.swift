@@ -12,10 +12,16 @@ protocol OddEventDetailFactoryProtocol {
 }
 
 final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
-    private let dependencyContainer: DependencyContainer
+    private let apiService: OddsAPIServiceProtocol
+    private let basketService: BasketServiceProtocol
+    private let authService: AuthenticationServiceProtocol
+    private let router: RouterProtocol
 
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
+    init(apiService: OddsAPIServiceProtocol, basketService: BasketServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+        self.apiService = apiService
+        self.basketService = basketService
+        self.authService = authService
+        self.router = router
     }
 
     func makeOddEventDetailViewController(
@@ -23,14 +29,13 @@ final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
         eventId: String
     ) -> UIViewController {
         let viewModel = OddEventDetailViewModel(
-            apiService: dependencyContainer.apiService,
-            basketService: dependencyContainer.basketService,
-            authService: dependencyContainer.authService,
+            apiService: apiService,
+            basketService: basketService,
+            authService: authService,
             sportKey: sportKey,
             eventId: eventId
         )
-        
-        let viewController = OddEventDetailViewController(viewModel: viewModel, router: AppRouter.shared)
+        let viewController = OddEventDetailViewController(viewModel: viewModel, router: router)
         return viewController
     }
 }
