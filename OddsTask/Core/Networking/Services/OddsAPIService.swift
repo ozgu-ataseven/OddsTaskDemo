@@ -17,7 +17,7 @@ public protocol OddsAPIServiceProtocol {
 final class OddsAPIService: OddsAPIServiceProtocol {
     private let network: NetworkServiceProtocol
 
-    init(network: NetworkServiceProtocol = NetworkService()) {
+    init(network: NetworkServiceProtocol) {
         self.network = network
     }
 
