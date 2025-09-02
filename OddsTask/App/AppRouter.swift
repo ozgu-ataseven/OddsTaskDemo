@@ -8,7 +8,15 @@
 import UIKit
 
 
-final class AppRouter {
+protocol RouterProtocol: AnyObject {
+    func push(_ route: Route, from source: UIViewController, animated: Bool)
+    func present(_ route: Route, from source: UIViewController, animated: Bool)
+    func setRoot(for route: Route, animated: Bool)
+    func dismiss(animated: Bool)
+    func pop(animated: Bool)
+}
+
+final class AppRouter: RouterProtocol {
 
     static let shared = AppRouter()
 

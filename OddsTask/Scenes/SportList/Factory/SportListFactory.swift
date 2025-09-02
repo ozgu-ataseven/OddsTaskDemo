@@ -23,7 +23,7 @@ final class SportListFactory: SportListFactoryProtocol {
             apiService: dependencyContainer.apiService,
             authService: dependencyContainer.authService
         )
-        let viewController = SportListViewController(viewModel: viewModel)
+        let viewController = SportListViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }
 }
