@@ -10,7 +10,6 @@ import Combine
 
 final class SportListViewModel: SportListViewModelProtocol {
     
-    private let dependencyContainer: DependencyContainer
     private let service: OddsAPIServiceProtocol
     private let authService: AuthenticationServiceProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -45,10 +44,9 @@ final class SportListViewModel: SportListViewModelProtocol {
         routeLoginSubject.eraseToAnyPublisher()
     }
     
-    init(dependencyContainer: DependencyContainer) {
-        self.dependencyContainer = dependencyContainer
-        self.service = dependencyContainer.apiService
-        self.authService = dependencyContainer.authService
+    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol) {
+        self.service = apiService
+        self.authService = authService
         bindSearch()
     }
     

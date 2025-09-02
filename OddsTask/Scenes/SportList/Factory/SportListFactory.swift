@@ -19,7 +19,10 @@ final class SportListFactory: SportListFactoryProtocol {
     }
 
     func makeSportListViewController() -> UIViewController {
-        let viewModel = SportListViewModel(dependencyContainer: dependencyContainer)
+        let viewModel = SportListViewModel(
+            apiService: dependencyContainer.apiService,
+            authService: dependencyContainer.authService
+        )
         let viewController = SportListViewController(viewModel: viewModel)
         return viewController
     }
