@@ -11,19 +11,38 @@ import Foundation
 
 final class NetworkService: NetworkServiceProtocol {
     func request<T: Decodable>(
-        endpoint: OddsAPIEndpoint,
-        headers: HTTPHeaders? = nil
+        endpoint: Endpoint,
+        headers: [String: String]? = nil
     ) -> AnyPublisher<T, NetworkError> {
         guard let url = URL(string: APIConfiguration.baseURL + endpoint.path) else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
 
+        let method: HTTPMethod = {
+            switch endpoint.method {
+            case .get: return .get
+            case .post: return .post
+            case .put: return .put
+            case .delete: return .delete
+            case .patch: return .patch
+            }
+        }()
+
+        let encoding: ParameterEncoding = {
+            switch endpoint.encoding {
+            case .url: return URLEncoding.default
+            case .json: return JSONEncoding.default
+            }
+        }()
+
+        let afHeaders: HTTPHeaders? = headers.map { HTTPHeaders($0.map { HTTPHeader(name: $0.key, value: $0.value) }) }
+
         return AF.request(
             url,
-            method: endpoint.method,
+            method: method,
             parameters: endpoint.parameters,
-            encoding: endpoint.encoding,
-            headers: headers
+            encoding: encoding,
+            headers: afHeaders
         )
         .validate()
         .responseData { response in

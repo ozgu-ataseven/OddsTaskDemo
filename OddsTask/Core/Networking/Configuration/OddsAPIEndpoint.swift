@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import Alamofire
 
-public enum OddsAPIEndpoint {
+public enum OddsAPIEndpoint: Endpoint {
     case getSports
     case getOddEvents(sportKey: String)
     case getOddEventDetail(sportKey: String, eventId: String)
@@ -24,8 +23,8 @@ public enum OddsAPIEndpoint {
         }
     }
 
-    public var parameters: Parameters {
-        var params: Parameters = ["apiKey": APIConfiguration.apiKey]
+    public var parameters: [String: Any]? {
+        var params: [String: Any] = ["apiKey": APIConfiguration.apiKey]
         switch self {
         case .getSports, .getOddEvents:
             break
@@ -38,11 +37,11 @@ public enum OddsAPIEndpoint {
         return params
     }
 
-    public var method: HTTPMethod {
+    public var method: HTTPMethodType {
         return .get
     }
 
-    public var encoding: ParameterEncoding {
-        return URLEncoding.default
+    public var encoding: ParameterEncodingType {
+        return .url
     }
 }

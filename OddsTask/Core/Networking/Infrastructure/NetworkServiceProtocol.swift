@@ -6,11 +6,10 @@
 //
 
 import Combine
-import Alamofire
 
 public protocol NetworkServiceProtocol {
     func request<T: Decodable>(
-        endpoint: OddsAPIEndpoint,
-        headers: HTTPHeaders?
+        endpoint: Endpoint,
+        headers: [String: String]?
     ) -> AnyPublisher<T, NetworkError>
 }
