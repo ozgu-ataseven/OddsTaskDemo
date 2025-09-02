@@ -12,6 +12,7 @@ final class SportListViewModel: SportListViewModelProtocol {
     
     private let service: OddsAPIServiceProtocol
     private let authService: AuthenticationServiceProtocol
+    private let searchFilter: SportsSearchFiltering
     private var cancellables = Set<AnyCancellable>()
     private let routeLoginSubject = PassthroughSubject<Void, Never>()
     
@@ -44,9 +45,10 @@ final class SportListViewModel: SportListViewModelProtocol {
         routeLoginSubject.eraseToAnyPublisher()
     }
     
-    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol) {
+    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, searchFilter: SportsSearchFiltering) {
         self.service = apiService
         self.authService = authService
+        self.searchFilter = searchFilter
         bindSearch()
     }
     
@@ -86,9 +88,9 @@ final class SportListViewModel: SportListViewModelProtocol {
     private func bindSearch() {
         $searchText
             .combineLatest($sports)
-            .map { query, allSports in
-                guard !query.isEmpty else { return allSports }
-                return allSports.filter { $0.title.lowercased().contains(query.lowercased()) }
+            .map { [weak self] query, allSports in
+                guard let self else { return allSports }
+                return self.searchFilter.filter(allSports, with: query)
             }
             .assign(to: \.filteredSports, on: self)
             .store(in: &cancellables)

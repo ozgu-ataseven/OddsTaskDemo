@@ -21,7 +21,8 @@ final class SportListFactory: SportListFactoryProtocol {
     func makeSportListViewController() -> UIViewController {
         let viewModel = SportListViewModel(
             apiService: dependencyContainer.apiService,
-            authService: dependencyContainer.authService
+            authService: dependencyContainer.authService,
+            searchFilter: ContainsSportsSearchFiltering()
         )
         let viewController = SportListViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController

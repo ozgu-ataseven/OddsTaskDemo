@@ -19,7 +19,11 @@ final class OddEventListFactory: OddEventListFactoryProtocol {
     }
 
     func makeOddEventListViewController(sportKey: String) -> UIViewController {
-        let viewModel = OddEventListViewModel(apiService: dependencyContainer.apiService, sportKey: sportKey)
+        let viewModel = OddEventListViewModel(
+            apiService: dependencyContainer.apiService,
+            sportKey: sportKey,
+            searchFilter: ContainsOddsSearchFiltering()
+        )
         let viewController = OddEventListViewController(viewModel: viewModel, router: AppRouter.shared)
         return viewController
     }

@@ -38,6 +38,7 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     // MARK: - Dependencies
     private let sportKey: String
     private let service: OddsAPIServiceProtocol
+    private let searchFilter: OddsSearchFiltering
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - State
@@ -46,9 +47,10 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     private let alertSubject = PassthroughSubject<Alert, Never>()
 
     // MARK: - Init
-    init(apiService: OddsAPIServiceProtocol, sportKey: String) {
+    init(apiService: OddsAPIServiceProtocol, sportKey: String, searchFilter: OddsSearchFiltering) {
         self.sportKey = sportKey
         self.service = apiService
+        self.searchFilter = searchFilter
         bindSearch()
     }
 
@@ -79,15 +81,9 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     private func bindSearch() {
         $searchText
             .combineLatest($odds)
-            .map { searchText, odds in
-                guard !searchText.isEmpty else { return odds }
-                let query = searchText.lowercased()
-
-                return odds.filter { item in
-                    let home = item.homeTeam?.lowercased() ?? ""
-                    let away = item.awayTeam?.lowercased() ?? ""
-                    return home.contains(query) || away.contains(query)
-                }
+            .map { [weak self] query, odds in
+                guard let self else { return odds }
+                return self.searchFilter.filter(odds, with: query)
             }
             .assign(to: &$filteredOdds)
     }
