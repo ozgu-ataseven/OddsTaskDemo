@@ -42,18 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func setupDependencies() {
         let userDefaultsService = UserDefaultsService(defaults: .standard)
-        let networkService = NetworkService()
-        let authService = AuthenticationService()
-        let analyticsService = FirebaseAnalyticsService()
-        let apiService = OddsAPIService(network: networkService)
-        let basketService = BasketService()
-        
         dependencyContainer = DependencyContainer(
-            userDefaultsService: userDefaultsService,
-            apiService: apiService,
-            authService: authService,
-            analyticsService: analyticsService,
-            basketService: basketService
+            userDefaultsService: userDefaultsService
         )
         AppRouter.shared.setup(with: dependencyContainer)
     }

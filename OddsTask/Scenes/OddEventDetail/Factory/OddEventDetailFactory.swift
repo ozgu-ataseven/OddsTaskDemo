@@ -13,14 +13,14 @@ protocol OddEventDetailFactoryProtocol {
 
 final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
-    private let basketService: BasketServiceProtocol
     private let authService: AuthenticationServiceProtocol
+    private let basketService: BasketServiceProtocol
     private let router: RouterProtocol
 
-    init(apiService: OddsAPIServiceProtocol, basketService: BasketServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
         self.apiService = apiService
-        self.basketService = basketService
         self.authService = authService
+        self.basketService = basketService
         self.router = router
     }
 

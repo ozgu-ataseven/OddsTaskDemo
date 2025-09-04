@@ -11,34 +11,40 @@ import FirebaseAuth
 final class AppFactory {
 
     private let dependencyContainer: DependencyContainer
+    
+    private lazy var networkService: NetworkServiceProtocol = NetworkService()
+    private lazy var authService: AuthenticationServiceProtocol = AuthenticationService()
+    private lazy var analyticsService: AnalyticsServiceProtocol = FirebaseAnalyticsService()
+    private lazy var apiService: OddsAPIServiceProtocol = OddsAPIService(network: networkService)
+    private lazy var basketService: BasketServiceProtocol = BasketService()
 
     private lazy var loginFactory = LoginFactory(
-        authService: dependencyContainer.authService,
-        analyticsService: dependencyContainer.analyticsService,
+        authService: authService,
+        analyticsService: analyticsService,
         router: AppRouter.shared
     )
     private lazy var registerFactory = RegisterFactory(
-        authService: dependencyContainer.authService,
+        authService: authService,
         router: AppRouter.shared
     )
     private lazy var sportListFactory = SportListFactory(
-        apiService: dependencyContainer.apiService,
-        authService: dependencyContainer.authService,
+        apiService: apiService,
+        authService: authService,
         router: AppRouter.shared
     )
     private lazy var oddEventListFactory = OddEventListFactory(
-        apiService: dependencyContainer.apiService,
+        apiService: apiService,
         router: AppRouter.shared
     )
     private lazy var oddEventDetailFactory = OddEventDetailFactory(
-        apiService: dependencyContainer.apiService,
-        basketService: dependencyContainer.basketService,
-        authService: dependencyContainer.authService,
+        apiService: apiService,
+        authService: authService,
+        basketService: basketService,
         router: AppRouter.shared
     )
     private lazy var basketFactory = BasketFactory(
-        authService: dependencyContainer.authService,
-        basketService: dependencyContainer.basketService,
+        authService: authService,
+        basketService: basketService,
         router: AppRouter.shared
     )
 
