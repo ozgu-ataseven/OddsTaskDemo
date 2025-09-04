@@ -92,7 +92,7 @@ final class SportListViewModel: SportListViewModelProtocol {
                 guard let self else { return allSports }
                 return self.searchFilter.filter(allSports, with: query)
             }
-            .assign(to: \.filteredSports, on: self)
+            .sink { [weak self] in self?.filteredSports = $0 }
             .store(in: &cancellables)
     }
 }
