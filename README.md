@@ -39,5 +39,5 @@ OddsTask, kullanıcıların farklı spor dallarındaki maçlar için oran bilgil
 
 1. Repository'yi klonlayın:
    ```bash
-   git clone https://github.com/ozgu-ataseven/OddsTaskBilyoner.git
+   git clone https://github.com/ozgu-ataseven/OddsTaskDemo.git
    cd OddsTask
