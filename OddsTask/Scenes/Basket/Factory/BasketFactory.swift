@@ -8,21 +8,21 @@
 import UIKit
 
 protocol BasketFactoryProtocol {
-    func makBasketViewController() -> UIViewController
+    func makeBasketViewController() -> UIViewController
 }
 
 final class BasketFactory: BasketFactoryProtocol {
     private let authService: AuthenticationServiceProtocol
     private let basketService: BasketServiceProtocol
-    private let router: RouterProtocol
+    private weak var router: RouterProtocol?
 
-    init(authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
+    init(authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol?) {
         self.authService = authService
         self.basketService = basketService
         self.router = router
     }
 
-    func makBasketViewController() -> UIViewController {
+    func makeBasketViewController() -> UIViewController {
         let viewModel = BasketViewModel(authService: authService, basketService: basketService)
         let viewController = BasketViewController(viewModel: viewModel, router: router)
         return viewController

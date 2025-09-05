@@ -87,8 +87,6 @@ final class OddEventDetailCell: UITableViewCell {
             stackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
         }
-
-        var hasPublished = false
         
         bookmaker.markets.forEach { market in
             let marketView = MarketView()

@@ -17,32 +17,44 @@ protocol RouterProtocol: AnyObject {
 }
 
 final class AppRouter: RouterProtocol {
-
     static let shared = AppRouter()
 
-    private(set) var navigationController: UINavigationController!
-    private var appFactory: AppFactory!
+    private(set) var navigationController: UINavigationController?
+    private var appFactory: AppFactory?
 
     private init() { }
 
     func setup(with dependencyContainer: DependencyContainer) {
-        appFactory = AppFactory(dependencyContainer: dependencyContainer)
-        let initialVC = appFactory.initialViewController()
-        navigationController = UINavigationController(rootViewController: initialVC)
+        let factory = AppFactory(dependencyContainer: dependencyContainer)
+        self.appFactory = factory
+        let initialVC = factory.initialViewController(router: self)
+        self.navigationController = UINavigationController(rootViewController: initialVC)
     }
 
     func push(_ route: Route, from source: UIViewController, animated: Bool = true) {
-        let targetVC = route.build(using: appFactory)
-        source.navigationController?.pushViewController(targetVC, animated: animated)
+        guard let nav = navigationController, let factory = appFactory else {
+            assertionFailure("AppRouter not set up. Call setup(with:) first.")
+            return
+        }
+        let targetVC = route.build(using: factory, router: self)
+        nav.pushViewController(targetVC, animated: animated)
     }
     
     func present(_ route: Route, from source: UIViewController, animated: Bool = true) {
-        let targetVC = route.build(using: appFactory)
-        source.navigationController?.present(targetVC, animated: animated)
+        guard let factory = appFactory else {
+            assertionFailure("AppRouter not set up. Call setup(with:) first.")
+            return
+        }
+        let targetVC = route.build(using: factory, router: self)
+        source.present(targetVC, animated: animated)
     }
 
     func setRoot(for route: Route, animated: Bool = true) {
-        let viewController = route.build(using: appFactory)
+        guard let nav = navigationController, let factory = appFactory else {
+            assertionFailure("AppRouter not set up. Call setup(with:) first.")
+            return
+        }
+        let viewController = route.build(using: factory, router: self)
 
         let transition = CATransition()
         transition.duration = animated ? 0.3 : 0.0
@@ -50,22 +62,23 @@ final class AppRouter: RouterProtocol {
         transition.subtype = route.transitionSubtype
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-        navigationController.view.layer.add(transition, forKey: kCATransition)
-        navigationController.setViewControllers([viewController], animated: false)
+        nav.view.layer.add(transition, forKey: kCATransition)
+        nav.setViewControllers([viewController], animated: false)
     }
     
     func navigationRootViewController() -> UIViewController {
-        return navigationController
+        guard let nav = navigationController else {
+            preconditionFailure("AppRouter not set up. Call setup(with:) before requesting the navigation root controller.")
+        }
+        return nav
     }
     
     func dismiss(animated: Bool = true) {
-        guard let presentedViewController = navigationController?.presentedViewController else {
-            return
-        }
+        guard let presentedViewController = navigationController?.presentedViewController else { return }
         presentedViewController.dismiss(animated: animated)
     }
     
     func pop(animated: Bool = true) {
-        navigationController.popViewController(animated: animated)
+        navigationController?.popViewController(animated: animated)
     }
 }

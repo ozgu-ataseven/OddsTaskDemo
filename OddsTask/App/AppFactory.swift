@@ -11,76 +11,106 @@ import FirebaseAuth
 final class AppFactory {
 
     private let dependencyContainer: DependencyContainer
-    
-    private lazy var networkService: NetworkServiceProtocol = NetworkService()
-    private lazy var authService: AuthenticationServiceProtocol = AuthenticationService()
-    private lazy var analyticsService: AnalyticsServiceProtocol = FirebaseAnalyticsService()
-    private lazy var apiService: OddsAPIServiceProtocol = OddsAPIService(network: networkService)
-    private lazy var basketService: BasketServiceProtocol = BasketService()
-
-    private lazy var loginFactory = LoginFactory(
-        authService: authService,
-        analyticsService: analyticsService,
-        router: AppRouter.shared
-    )
-    private lazy var registerFactory = RegisterFactory(
-        authService: authService,
-        router: AppRouter.shared
-    )
-    private lazy var sportListFactory = SportListFactory(
-        apiService: apiService,
-        authService: authService,
-        router: AppRouter.shared
-    )
-    private lazy var oddEventListFactory = OddEventListFactory(
-        apiService: apiService,
-        router: AppRouter.shared
-    )
-    private lazy var oddEventDetailFactory = OddEventDetailFactory(
-        apiService: apiService,
-        authService: authService,
-        basketService: basketService,
-        router: AppRouter.shared
-    )
-    private lazy var basketFactory = BasketFactory(
-        authService: authService,
-        basketService: basketService,
-        router: AppRouter.shared
-    )
 
     init(dependencyContainer: DependencyContainer) {
         self.dependencyContainer = dependencyContainer
     }
 
-    func initialViewController() -> UIViewController {
+    // MARK: - Private helpers (her çağrıda yeni instance)
+    private func makeLoginFactory(router: RouterProtocol) -> LoginFactory {
+        let auth = AuthenticationService()
+        let analytics = FirebaseAnalyticsService()
+        return LoginFactory(
+            authService: auth,
+            analyticsService: analytics,
+            router: router
+        )
+    }
+
+    private func makeRegisterFactory(router: RouterProtocol) -> RegisterFactory {
+        let auth = AuthenticationService()
+        return RegisterFactory(
+            authService: auth,
+            router: router
+        )
+    }
+
+    private func makeSportListFactory(router: RouterProtocol) -> SportListFactory {
+        let network = NetworkService()
+        let api = OddsAPIService(network: network)
+        let auth = AuthenticationService()
+        return SportListFactory(
+            apiService: api,
+            authService: auth,
+            router: router
+        )
+    }
+
+    private func makeOddEventListFactory(router: RouterProtocol) -> OddEventListFactory {
+        let network = NetworkService()
+        let api = OddsAPIService(network: network)
+        return OddEventListFactory(
+            apiService: api,
+            router: router
+        )
+    }
+
+    private func makeOddEventDetailFactory(router: RouterProtocol) -> OddEventDetailFactory {
+        let network = NetworkService()
+        let api = OddsAPIService(network: network)
+        let auth = AuthenticationService()
+        let basket = BasketService()
+        return OddEventDetailFactory(
+            apiService: api,
+            authService: auth,
+            basketService: basket,
+            router: router
+        )
+    }
+
+    private func makeBasketFactory(router: RouterProtocol) -> BasketFactory {
+        let auth = AuthenticationService()
+        let basket = BasketService()
+        return BasketFactory(
+            authService: auth,
+            basketService: basket,
+            router: router
+        )
+    }
+
+    // MARK: - ViewController builders (transient)
+    func initialViewController(router: RouterProtocol) -> UIViewController {
         if Auth.auth().currentUser != nil {
-            return sportListFactory.makeSportListViewController()
+            return makeSportListFactory(router: router).makeSportListViewController()
         } else {
-            return loginFactory.makeLoginViewController()
+            return makeLoginFactory(router: router).makeLoginViewController()
         }
     }
 
-    func loginViewController() -> UIViewController {
-        return loginFactory.makeLoginViewController()
+    func loginViewController(router: RouterProtocol) -> UIViewController {
+        makeLoginFactory(router: router).makeLoginViewController()
     }
 
-    func registerViewController() -> UIViewController {
-        return registerFactory.makeRegisterViewController()
+    func registerViewController(router: RouterProtocol) -> UIViewController {
+        makeRegisterFactory(router: router).makeRegisterViewController()
     }
 
-    func sportListViewController() -> UIViewController {
-        return sportListFactory.makeSportListViewController()
+    func sportListViewController(router: RouterProtocol) -> UIViewController {
+        makeSportListFactory(router: router).makeSportListViewController()
     }
 
-    func oddListViewController(sportKey: String) -> UIViewController {
-        return oddEventListFactory.makeOddEventListViewController(sportKey: sportKey)
+    func oddListViewController(sportKey: String, router: RouterProtocol) -> UIViewController {
+        makeOddEventListFactory(router: router).makeOddEventListViewController(sportKey: sportKey)
     }
-    
-    func oddEventDetailViewController(sportKey: String, eventId: String)-> UIViewController {
-        return oddEventDetailFactory.makeOddEventDetailViewController(sportKey: sportKey, eventId: eventId)
+
+    func oddEventDetailViewController(sportKey: String, eventId: String, router: RouterProtocol) -> UIViewController {
+        makeOddEventDetailFactory(router: router).makeOddEventDetailViewController(
+            sportKey: sportKey,
+            eventId: eventId
+        )
     }
-    
-    func basketViewController() -> UIViewController {
-        return basketFactory.makBasketViewController()
+
+    func basketViewController(router: RouterProtocol) -> UIViewController {
+        makeBasketFactory(router: router).makeBasketViewController()
     }
 }

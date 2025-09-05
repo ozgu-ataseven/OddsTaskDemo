@@ -14,9 +14,9 @@ protocol SportListFactoryProtocol {
 final class SportListFactory: SportListFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
     private let authService: AuthenticationServiceProtocol
-    private let router: RouterProtocol
+    private weak var router: RouterProtocol?
 
-    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol?) {
         self.apiService = apiService
         self.authService = authService
         self.router = router

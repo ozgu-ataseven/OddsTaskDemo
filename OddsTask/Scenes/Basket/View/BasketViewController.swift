@@ -11,11 +11,11 @@ import Combine
 final class BasketViewController: BaseViewController<BasketView> {
 
     private let viewModel: BasketViewModelProtocol
-    private let router: RouterProtocol
+    private weak var router: RouterProtocol?
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
-    init(viewModel: BasketViewModelProtocol, router: RouterProtocol) {
+    init(viewModel: BasketViewModelProtocol, router: RouterProtocol?) {
         self.viewModel = viewModel
         self.router = router
         super.init(nibName: nil, bundle: nil)
@@ -56,7 +56,7 @@ final class BasketViewController: BaseViewController<BasketView> {
             .sink { [weak self] alert in
                 self?.showAlert(alert)
             }
-            .store(in: &cancellables)
+            .store(in: &cancellables) 
         
         viewModel.totalPricePublisher
             .combineLatest(viewModel.totalAmountPublisher)
@@ -77,8 +77,8 @@ final class BasketViewController: BaseViewController<BasketView> {
 
     private func bindView() {
         rootView.closeTappedPublisher
-            .sink {
-                self.router.dismiss(animated: true)
+            .sink { [weak self] in
+                self?.router?.dismiss(animated: true)
             }
             .store(in: &cancellables)
         
@@ -87,6 +87,10 @@ final class BasketViewController: BaseViewController<BasketView> {
                 self?.viewModel.clearBasket()
             }
             .store(in: &cancellables)
+    }
+    
+    deinit {
+        cancellables.removeAll()
     }
 }
 

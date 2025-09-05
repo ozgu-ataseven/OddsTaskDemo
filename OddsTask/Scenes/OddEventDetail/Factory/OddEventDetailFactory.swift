@@ -15,7 +15,7 @@ final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
     private let authService: AuthenticationServiceProtocol
     private let basketService: BasketServiceProtocol
-    private let router: RouterProtocol
+    private weak var router: RouterProtocol?
 
     init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
         self.apiService = apiService

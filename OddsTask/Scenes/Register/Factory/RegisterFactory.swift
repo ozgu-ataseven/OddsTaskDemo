@@ -13,7 +13,7 @@ protocol RegisterFactoryProtocol {
 
 final class RegisterFactory: RegisterFactoryProtocol {
     private let authService: AuthenticationServiceProtocol
-    private let router: RouterProtocol
+    private weak var router: RouterProtocol?
 
     init(authService: AuthenticationServiceProtocol, router: RouterProtocol) {
         self.authService = authService

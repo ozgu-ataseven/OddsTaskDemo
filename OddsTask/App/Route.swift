@@ -24,20 +24,20 @@ enum Route {
         }
     }
 
-    func build(using factory: AppFactory) -> UIViewController {
+    func build(using factory: AppFactory, router: RouterProtocol) -> UIViewController {
         switch self {
         case .login:
-            return factory.loginViewController()
+            return factory.loginViewController(router: router)
         case .register:
-            return factory.registerViewController()
+            return factory.registerViewController(router: router)
         case .sportList:
-            return factory.sportListViewController()
+            return factory.sportListViewController(router: router)
         case .oddEventList(let sportKey):
-            return factory.oddListViewController(sportKey: sportKey)
-        case .oddEventDetail(sportKey: let sportKey, eventId: let eventId):
-            return factory.oddEventDetailViewController(sportKey: sportKey, eventId: eventId)
+            return factory.oddListViewController(sportKey: sportKey, router: router)
+        case .oddEventDetail(let sportKey, let eventId):
+            return factory.oddEventDetailViewController(sportKey: sportKey, eventId: eventId, router: router)
         case .basket:
-            return factory.basketViewController()
+            return factory.basketViewController(router: router)
         }
     }
 }
