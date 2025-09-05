@@ -25,6 +25,10 @@ class BaseViewController<RootView: UIView>: UIViewController, AlertPresentable {
         super.viewDidLoad()
         setupLayout()
     }
+    
+    deinit {
+        ProgressView.hide()
+    }
 
     func setupLayout() {}
 }

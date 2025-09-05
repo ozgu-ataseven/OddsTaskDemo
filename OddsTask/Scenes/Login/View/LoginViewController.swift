@@ -13,12 +13,12 @@ final class LoginViewController: BaseViewController<LoginView> {
     // MARK: - Properties
 
     private let viewModel: LoginViewModelProtocol
-    private weak var router: RouterProtocol?
+    private unowned let router: RouterProtocol
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
 
-    init(viewModel: LoginViewModelProtocol, router: RouterProtocol?) {
+    init(viewModel: LoginViewModelProtocol, router: RouterProtocol) {
         self.viewModel = viewModel
         self.router = router
         super.init(nibName: nil, bundle: nil)
@@ -49,7 +49,7 @@ final class LoginViewController: BaseViewController<LoginView> {
         rootView.registerTappedPublisher
             .sink { [weak self] in
                 guard let self else { return }
-                router?.push(.register, from: self, animated: true)
+                router.push(.register, from: self, animated: true)
                 viewModel.registerTapped()
             }
             .store(in: &cancellables)
@@ -91,7 +91,7 @@ final class LoginViewController: BaseViewController<LoginView> {
         
         viewModel.routeSportListPublisher
             .sink { [weak self] in
-                self?.router?.setRoot(for: .sportList, animated: true)
+                self?.router.setRoot(for: .sportList, animated: true)
             }
             .store(in: &cancellables)
         

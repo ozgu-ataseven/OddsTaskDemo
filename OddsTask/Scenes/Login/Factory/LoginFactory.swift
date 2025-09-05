@@ -14,7 +14,7 @@ protocol LoginFactoryProtocol {
 final class LoginFactory: LoginFactoryProtocol {
     private let authService: AuthenticationServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
-    private weak var router: RouterProtocol?
+    private unowned let router: RouterProtocol
 
     init(authService: AuthenticationServiceProtocol, analyticsService: AnalyticsServiceProtocol, router: RouterProtocol) {
         self.authService = authService

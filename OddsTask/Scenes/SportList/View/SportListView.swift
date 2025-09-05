@@ -116,8 +116,11 @@ final class SportListView: UIView {
     }
 
     // MARK: - Cleanup
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        if newWindow == nil {
+            collectionView.unsubscribeKeyboardNotifies()
+        }
     }
 }
 

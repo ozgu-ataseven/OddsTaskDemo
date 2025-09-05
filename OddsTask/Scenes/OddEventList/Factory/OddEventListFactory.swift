@@ -13,7 +13,7 @@ protocol OddEventListFactoryProtocol {
 
 final class OddEventListFactory: OddEventListFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
-    private weak var router: RouterProtocol?
+    private unowned let router: RouterProtocol
 
     init(apiService: OddsAPIServiceProtocol, router: RouterProtocol) {
         self.apiService = apiService
