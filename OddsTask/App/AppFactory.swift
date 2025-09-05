@@ -18,8 +18,8 @@ final class AppFactory {
 
     // MARK: - Private helpers (her çağrıda yeni instance)
     private func makeLoginFactory(router: RouterProtocol) -> LoginFactory {
-        let auth = AuthenticationService()
-        let analytics = FirebaseAnalyticsService()
+        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let analytics: AnalyticsServiceProtocol = dependencyContainer.resolve()
         return LoginFactory(
             authService: auth,
             analyticsService: analytics,
@@ -28,7 +28,7 @@ final class AppFactory {
     }
 
     private func makeRegisterFactory(router: RouterProtocol) -> RegisterFactory {
-        let auth = AuthenticationService()
+        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
         return RegisterFactory(
             authService: auth,
             router: router
@@ -36,9 +36,8 @@ final class AppFactory {
     }
 
     private func makeSportListFactory(router: RouterProtocol) -> SportListFactory {
-        let network = NetworkService()
-        let api = OddsAPIService(network: network)
-        let auth = AuthenticationService()
+        let api: OddsAPIServiceProtocol = dependencyContainer.resolve()
+        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
         return SportListFactory(
             apiService: api,
             authService: auth,
@@ -47,8 +46,7 @@ final class AppFactory {
     }
 
     private func makeOddEventListFactory(router: RouterProtocol) -> OddEventListFactory {
-        let network = NetworkService()
-        let api = OddsAPIService(network: network)
+        let api: OddsAPIServiceProtocol = dependencyContainer.resolve()
         return OddEventListFactory(
             apiService: api,
             router: router
@@ -56,10 +54,9 @@ final class AppFactory {
     }
 
     private func makeOddEventDetailFactory(router: RouterProtocol) -> OddEventDetailFactory {
-        let network = NetworkService()
-        let api = OddsAPIService(network: network)
-        let auth = AuthenticationService()
-        let basket = BasketService()
+        let api: OddsAPIServiceProtocol = dependencyContainer.resolve()
+        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let basket: BasketServiceProtocol = dependencyContainer.resolve()
         return OddEventDetailFactory(
             apiService: api,
             authService: auth,
@@ -69,8 +66,8 @@ final class AppFactory {
     }
 
     private func makeBasketFactory(router: RouterProtocol) -> BasketFactory {
-        let auth = AuthenticationService()
-        let basket = BasketService()
+        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let basket: BasketServiceProtocol = dependencyContainer.resolve()
         return BasketFactory(
             authService: auth,
             basketService: basket,

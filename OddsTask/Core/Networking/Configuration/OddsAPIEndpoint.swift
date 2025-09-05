@@ -24,17 +24,17 @@ public enum OddsAPIEndpoint: Endpoint {
     }
 
     public var parameters: [String: Any]? {
-        var params: [String: Any] = ["apiKey": APIConfiguration.apiKey]
         switch self {
         case .getSports, .getOddEvents:
-            break
+            return nil
         case .getOddEventDetail:
-            params["regions"] = "eu"
-            params["markets"] = "h2h"
-            params["dateFormat"] = "iso"
-            params["oddsFormat"] = "decimal"
+            return [
+                "regions": "eu",
+                "markets": "h2h",
+                "dateFormat": "iso",
+                "oddsFormat": "decimal"
+            ]
         }
-        return params
     }
 
     public var method: HTTPMethodType {

@@ -45,6 +45,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dependencyContainer = DependencyContainer(
             userDefaultsService: userDefaultsService
         )
+
+        // Core/config
+        dependencyContainer.register(APIConfiguration.self, scope: .singleton) { _ in
+            APIConfiguration()
+        }
+
+        dependencyContainer.register(NetworkLogger.self, scope: .singleton) { _ in
+            NetworkLogger()
+        }
+        
+        dependencyContainer.register(AnalyticsServiceProtocol.self, scope: .singleton) { _ in
+            FirebaseAnalyticsService()
+        }
+
+        // Networking
+        dependencyContainer.register(NetworkServiceProtocol.self, scope: .singleton) { c in
+            NetworkService(
+                configuration: c.resolve(APIConfiguration.self),
+                logger: c.resolve(NetworkLogger.self)
+            )
+        }
+
+        // Domain services
+        dependencyContainer.register(OddsAPIServiceProtocol.self, scope: .singleton) { c in
+            OddsAPIService(network: c.resolve(NetworkServiceProtocol.self))
+        }
+
+        dependencyContainer.register(AuthenticationServiceProtocol.self, scope: .singleton) { c in
+            AuthenticationService()
+        }
+
+        dependencyContainer.register(BasketServiceProtocol.self, scope: .singleton) { c in
+            BasketService()
+        }
+
+        // Router / Factory will resolve dependencies from container
         AppRouter.shared.setup(with: dependencyContainer)
     }
 

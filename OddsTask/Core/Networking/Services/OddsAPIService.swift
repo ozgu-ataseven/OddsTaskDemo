@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Combine
+import Combine 
 
 public protocol OddsAPIServiceProtocol {
     func getAllSports() -> AnyPublisher<[Sport], NetworkError>
@@ -22,14 +22,14 @@ final class OddsAPIService: OddsAPIServiceProtocol {
     }
 
     func getAllSports() -> AnyPublisher<[Sport], NetworkError> {
-        return network.request(endpoint: OddsAPIEndpoint.getSports, headers: nil)
+        network.request(endpoint: OddsAPIEndpoint.getSports, headers: nil)
     }
-    
+
     func getOddEvents(for sportKey: String) -> AnyPublisher<[OddEvent], NetworkError> {
-        return network.request(endpoint: OddsAPIEndpoint.getOddEvents(sportKey: sportKey), headers: nil)
+        network.request(endpoint: OddsAPIEndpoint.getOddEvents(sportKey: sportKey), headers: nil)
     }
-    
+
     func getOddEventDetail(sportKey: String, eventId: String) -> AnyPublisher<OddEventDetail, NetworkError> {
-        return network.request(endpoint: OddsAPIEndpoint.getOddEventDetail(sportKey: sportKey, eventId: eventId), headers: nil)
+        network.request(endpoint: OddsAPIEndpoint.getOddEventDetail(sportKey: sportKey, eventId: eventId), headers: nil)
     }
 }

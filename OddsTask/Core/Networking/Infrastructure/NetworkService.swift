@@ -10,37 +10,56 @@ import Combine
 import Foundation
 
 final class NetworkService: NetworkServiceProtocol {
+    private let configuration: APIConfiguration
+    private let session: Session
+    private let logger: NetworkLogger
+
+    init(configuration: APIConfiguration,
+         logger: NetworkLogger,
+         session: Session = .default) {
+        self.configuration = configuration
+        self.logger = logger
+        self.session = session
+    }
+
     func request<T: Decodable>(
         endpoint: Endpoint,
         headers: [String: String]? = nil
     ) -> AnyPublisher<T, NetworkError> {
-        guard let url = URL(string: APIConfiguration.baseURL + endpoint.path) else {
+        guard let url = URL(string: configuration.baseURL + endpoint.path) else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
 
         let method: HTTPMethod = {
             switch endpoint.method {
-            case .get: return .get
-            case .post: return .post
-            case .put: return .put
+            case .get:    return .get
+            case .post:   return .post
+            case .put:    return .put
             case .delete: return .delete
-            case .patch: return .patch
+            case .patch:  return .patch
             }
         }()
 
         let encoding: ParameterEncoding = {
             switch endpoint.encoding {
-            case .url: return URLEncoding.default
+            case .url:  return URLEncoding.default
             case .json: return JSONEncoding.default
             }
         }()
 
-        let afHeaders: HTTPHeaders? = headers.map { HTTPHeaders($0.map { HTTPHeader(name: $0.key, value: $0.value) }) }
+        var mergedHeaders: [String: String] = ["Accept": "application/json"]
+        if let headers { for (k, v) in headers { mergedHeaders[k] = v } }
+        let afHeaders = HTTPHeaders(mergedHeaders.map { HTTPHeader(name: $0.key, value: $0.value) })
 
-        return AF.request(
+        var parameters = endpoint.parameters ?? [:]
+        if parameters["apiKey"] == nil, !configuration.apiKey.isEmpty {
+            parameters["apiKey"] = configuration.apiKey
+        }
+
+        return session.request(
             url,
             method: method,
-            parameters: endpoint.parameters,
+            parameters: parameters,
             encoding: encoding,
             headers: afHeaders
         )
@@ -49,14 +68,15 @@ final class NetworkService: NetworkServiceProtocol {
             if let afRequest = response.request {
                 debugPrint("➡️ Request URL: \(afRequest.url?.absoluteString ?? "")")
             }
-            
+
             if let afOriginalRequest = response.request,
                let curl = (response.metrics?.taskInterval).map({ _ in
-                   return AF.request(afOriginalRequest).cURLDescription()
+                   AF.request(afOriginalRequest).cURLDescription()
                }) {
+                _ = self.logger
                 print("🧪 cURL: \(curl)")
             }
-            
+
             if case let .success(data) = response.result {
                 NetworkLogger.logJSON(data: data, prefix: "📥 Response JSON")
             } else {

@@ -8,6 +8,6 @@
 import Foundation
 
 struct APIConfiguration {
-    static let baseURL: String = "https://api.the-odds-api.com/v4/"
-    static let apiKey = "3d5bf6ca298c18ce46d823959a674a14"
+    let baseURL: String = "https://api.the-odds-api.com/v4/"
+    let apiKey = "3d5bf6ca298c18ce46d823959a674a14"
 }
