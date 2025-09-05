@@ -37,7 +37,9 @@ final class AppRouter: RouterProtocol {
             return
         }
         let targetVC = route.build(using: factory, router: self)
-        nav.pushViewController(targetVC, animated: animated)
+        DispatchQueue.main.async { [weak nav] in
+            nav?.pushViewController(targetVC, animated: animated)
+        }
     }
     
     func present(_ route: Route, from source: UIViewController, animated: Bool = true) {
@@ -46,7 +48,15 @@ final class AppRouter: RouterProtocol {
             return
         }
         let targetVC = route.build(using: factory, router: self)
-        source.present(targetVC, animated: animated)
+        DispatchQueue.main.async { [weak self] in
+            if source.view.window != nil {
+                source.present(targetVC, animated: animated)
+            } else if let nav = self?.navigationController {
+                nav.present(targetVC, animated: animated)
+            } else {
+                assertionFailure("No valid presenter found for route \(route).")
+            }
+        }
     }
 
     func setRoot(for route: Route, animated: Bool = true) {
@@ -56,14 +66,20 @@ final class AppRouter: RouterProtocol {
         }
         let viewController = route.build(using: factory, router: self)
 
-        let transition = CATransition()
-        transition.duration = animated ? 0.3 : 0.0
-        transition.type = .push
-        transition.subtype = route.transitionSubtype
-        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        DispatchQueue.main.async { [weak nav] in
+            if let presented = nav?.presentedViewController {
+                presented.dismiss(animated: false)
+            }
 
-        nav.view.layer.add(transition, forKey: kCATransition)
-        nav.setViewControllers([viewController], animated: false)
+            let transition = CATransition()
+            transition.duration = animated ? 0.3 : 0.0
+            transition.type = .push
+            transition.subtype = route.transitionSubtype
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+            nav?.view.layer.add(transition, forKey: kCATransition)
+            nav?.setViewControllers([viewController], animated: false)
+        }
     }
     
     func navigationRootViewController() -> UIViewController {
@@ -74,11 +90,15 @@ final class AppRouter: RouterProtocol {
     }
     
     func dismiss(animated: Bool = true) {
-        guard let presentedViewController = navigationController?.presentedViewController else { return }
-        presentedViewController.dismiss(animated: animated)
+        DispatchQueue.main.async { [weak self] in
+            guard let presented = self?.navigationController?.presentedViewController else { return }
+            presented.dismiss(animated: animated)
+        }
     }
     
     func pop(animated: Bool = true) {
-        navigationController?.popViewController(animated: animated)
+        DispatchQueue.main.async { [weak navigationController] in
+            navigationController?.popViewController(animated: animated)
+        }
     }
 }
