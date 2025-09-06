@@ -69,7 +69,7 @@ final class BasketViewModel: BasketViewModelProtocol {
             guard let self else { return }
             self.isLoading = false
             if case let .failure(error) = result {
-                let alert = Alert(title: "Error", message: error.localizedDescription, actions: [.init(title: "Tamam")])
+                let alert = Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")])
                 alertSubject.send(alert)
                 return
             }
@@ -94,7 +94,7 @@ final class BasketViewModel: BasketViewModelProtocol {
                 self.basketItems.removeAll { $0.id == id }
                 self.publish()
             case .failure(let error):
-                let alert = Alert(title: "Error", message: error.localizedDescription, actions: [.init(title: "Tamam")])
+                let alert = Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")])
                 self.alertSubject.send(alert)
             }
         }
@@ -112,7 +112,7 @@ final class BasketViewModel: BasketViewModelProtocol {
             case .success:
                 self.fetchBasketItems()
             case .failure(let error):
-                let alert = Alert(title: "Error", message: error.localizedDescription, actions: [.init(title: "Tamam")])
+                let alert = Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")])
                 self.alertSubject.send(alert)
             }
         }

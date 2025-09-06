@@ -85,7 +85,7 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
             case .success:
                 self?.basketRouteSubject.send(())
             case .failure(let error):
-                self?.alertSubject.send(Alert(title: "Sepet Hatası", message: error.localizedDescription, actions: [.init(title: "Tamam")]))
+                self?.alertSubject.send(Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")]))
             }
         }
     }
