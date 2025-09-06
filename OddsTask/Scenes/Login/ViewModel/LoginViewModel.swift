@@ -75,12 +75,16 @@ final class LoginViewModel: LoginViewModelProtocol {
         }
         
         authService.login(email: email, password: password) { [weak self] result in
-            self?.isLoading = true
+            self?.isLoading = false
             switch result {
             case .success:
                 self?.routeSportListSubject.send()
-            case .failure(let error):
-                self?.alert = Alert(title: "Hata", message: error.localizedDescription, actions: [.init(title: "Tamam")])
+            case .failure(let authError):
+                self?.alert = Alert(
+                    title: authError.title,
+                    message: authError.userMessage,
+                    actions: [.init(title: "Tamam")]
+                )
             }
         }
     }

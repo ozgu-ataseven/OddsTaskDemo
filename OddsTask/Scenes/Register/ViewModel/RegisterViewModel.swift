@@ -12,6 +12,7 @@ final class RegisterViewModel: RegisterViewModelProtocol {
     
     private let authService: FirebaseAuthServiceProtocol
     private let routeSportListSubject = PassthroughSubject<Void, Never>()
+    private let routeLoginSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Public Properties
     @Published var name: String = ""
@@ -51,6 +52,10 @@ final class RegisterViewModel: RegisterViewModelProtocol {
         routeSportListSubject.eraseToAnyPublisher()
     }
     
+    var routeLoginPublisher: AnyPublisher<Void, Never> {
+        routeLoginSubject.eraseToAnyPublisher()
+    }
+    
     var loadingPublisher: AnyPublisher<Bool, Never> {
         $isLoading.eraseToAnyPublisher()
     }
@@ -78,28 +83,28 @@ final class RegisterViewModel: RegisterViewModelProtocol {
             switch result {
             case .success:
                 self?.routeSportListSubject.send()
-            case .failure(let error):
-                handleError(error)
+            case .failure(let authError):
+                switch authError {
+                case .emailAlreadyInUse:
+                    self?.alert = Alert(
+                        title: "Email Zaten Kayıtlı",
+                        message: "Bu email adresi zaten kayıtlı. Giriş yapmak ister misiniz?",
+                        actions: [
+                            .init(title: "Giriş Yap", action: { [weak self] in
+                                self?.routeLoginSubject.send()
+                                return nil
+                            }()),
+                            .init(title: "İptal", style: .cancel)
+                        ]
+                    )
+                default:
+                    self?.alert = Alert(
+                        title: authError.title,
+                        message: authError.userMessage,
+                        actions: [.init(title: "Tamam")]
+                    )
+                }
             }
-        }
-        
-        func handleError(_ error: Error) {
-            let firebaseMessage = error.localizedDescription.lowercased()
-            
-            let readableMessage: String
-            if firebaseMessage.contains("email") && firebaseMessage.contains("already") {
-                readableMessage = "Bu email adresi zaten kayıtlı."
-            } else if firebaseMessage.contains("network") {
-                readableMessage = "İnternet bağlantınızı kontrol edin."
-            } else {
-                readableMessage = error.localizedDescription
-            }
-            
-            alert = Alert(
-                title: "Kayıt Başarısız",
-                message: readableMessage,
-                actions: [.init(title: "Tamam")]
-            )
         }
     }
     

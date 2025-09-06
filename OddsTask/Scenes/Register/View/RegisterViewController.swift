@@ -101,6 +101,13 @@ final class RegisterViewController: BaseViewController<RegisterView> {
             }
             .store(in: &cancellables)
         
+        viewModel.routeLoginPublisher
+            .sink { [weak self] in
+                guard let self else { return }
+                router.pop(animated: true)
+            }
+            .store(in: &cancellables)
+        
         viewModel.loadingPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] isLoading in

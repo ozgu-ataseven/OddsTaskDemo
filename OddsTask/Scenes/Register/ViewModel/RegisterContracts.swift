@@ -25,6 +25,7 @@ protocol RegisterViewModelProtocol: AnyObject {
     var loadingPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<Alert, Never> { get }
     var routeSportListPublisher: AnyPublisher<Void, Never> { get }
+    var routeLoginPublisher: AnyPublisher<Void, Never> { get }
     
     // MARK: - Actions
     func register()
