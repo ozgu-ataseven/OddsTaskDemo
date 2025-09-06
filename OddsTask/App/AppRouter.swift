@@ -27,8 +27,10 @@ final class AppRouter: RouterProtocol {
     func setup(with dependencyContainer: DependencyContainer) {
         let factory = AppFactory(dependencyContainer: dependencyContainer)
         self.appFactory = factory
-        let initialVC = factory.initialViewController(router: self)
-        self.navigationController = UINavigationController(rootViewController: initialVC)
+    }
+    
+    func installRoot(_ viewController: UIViewController) {
+        self.navigationController = UINavigationController(rootViewController: viewController)
     }
 
     func push(_ route: Route, from source: UIViewController, animated: Bool = true) {

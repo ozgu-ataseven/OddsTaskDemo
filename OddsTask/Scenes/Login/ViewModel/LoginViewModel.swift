@@ -10,7 +10,7 @@ import Combine
 
 final class LoginViewModel: LoginViewModelProtocol {
 
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
     private let routeSportListSubject = PassthroughSubject<Void, Never>()
     
@@ -51,7 +51,7 @@ final class LoginViewModel: LoginViewModelProtocol {
     }
 
     // MARK: - Initialization
-    init(authService: AuthenticationServiceProtocol, analyticsService: AnalyticsServiceProtocol) {
+    init(authService: FirebaseAuthServiceProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.authService = authService
         self.analyticsService = analyticsService
         setupValidation()

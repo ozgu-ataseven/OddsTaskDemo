@@ -11,7 +11,7 @@ import Combine
 final class SportListViewModel: SportListViewModelProtocol {
     
     private let service: OddsAPIServiceProtocol
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private let searchFilter: SportsSearchFiltering
     private var cancellables = Set<AnyCancellable>()
     private let routeLoginSubject = PassthroughSubject<Void, Never>()
@@ -45,7 +45,7 @@ final class SportListViewModel: SportListViewModelProtocol {
         routeLoginSubject.eraseToAnyPublisher()
     }
     
-    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, searchFilter: SportsSearchFiltering) {
+    init(apiService: OddsAPIServiceProtocol, authService: FirebaseAuthServiceProtocol, searchFilter: SportsSearchFiltering) {
         self.service = apiService
         self.authService = authService
         self.searchFilter = searchFilter

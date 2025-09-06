@@ -38,14 +38,14 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
     // MARK: - Dependencies
     private let service: OddsAPIServiceProtocol
     private let basketService: BasketServiceProtocol
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
     init(
         apiService: OddsAPIServiceProtocol,
         basketService: BasketServiceProtocol,
-        authService: AuthenticationServiceProtocol,
+        authService: FirebaseAuthServiceProtocol,
         sportKey: String,
         eventId: String
     ) {

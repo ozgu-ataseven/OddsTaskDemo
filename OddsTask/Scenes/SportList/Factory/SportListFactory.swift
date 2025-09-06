@@ -13,10 +13,10 @@ protocol SportListFactoryProtocol {
 
 final class SportListFactory: SportListFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private unowned let router: RouterProtocol
 
-    init(apiService: OddsAPIServiceProtocol, authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+    init(apiService: OddsAPIServiceProtocol, authService: FirebaseAuthServiceProtocol, router: RouterProtocol) {
         self.apiService = apiService
         self.authService = authService
         self.router = router

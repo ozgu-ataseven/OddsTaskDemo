@@ -12,11 +12,11 @@ protocol BasketFactoryProtocol {
 }
 
 final class BasketFactory: BasketFactoryProtocol {
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private let basketService: BasketServiceProtocol
     private unowned let router: RouterProtocol
 
-    init(authService: AuthenticationServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
+    init(authService: FirebaseAuthServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
         self.authService = authService
         self.basketService = basketService
         self.router = router

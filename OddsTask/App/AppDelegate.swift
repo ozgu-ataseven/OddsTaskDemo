@@ -72,8 +72,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             OddsAPIService(network: c.resolve(NetworkServiceProtocol.self))
         }
 
-        dependencyContainer.register(AuthenticationServiceProtocol.self, scope: .singleton) { c in
-            AuthenticationService()
+        dependencyContainer.register(FirebaseAuthServiceProtocol.self, scope: .singleton) { c in
+            FirebaseAuthService()
         }
 
         dependencyContainer.register(BasketServiceProtocol.self, scope: .singleton) { c in
@@ -85,9 +85,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func launchInitialViewController() {
+        let router = AppRouter.shared
+        let factory = AppFactory(dependencyContainer: dependencyContainer)
+        let coordinator = AppCoordinator(router: router, factory: factory, firebaseService: dependencyContainer.resolve())
+        let initialVC = coordinator.makeInitialRootViewController()
+        router.installRoot(initialVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = AppRouter.shared.navigationRootViewController()
-        window.makeKeyAndVisible()
         self.window = window
+        window.rootViewController = router.navigationRootViewController()
+        window.makeKeyAndVisible()
     }
 }

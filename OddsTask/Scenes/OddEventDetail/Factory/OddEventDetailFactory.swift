@@ -13,13 +13,13 @@ protocol OddEventDetailFactoryProtocol {
 
 final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private let basketService: BasketServiceProtocol
     private unowned let router: RouterProtocol
 
     init(
         apiService: OddsAPIServiceProtocol,
-        authService: AuthenticationServiceProtocol,
+        authService: FirebaseAuthServiceProtocol,
         basketService: BasketServiceProtocol,
         router: RouterProtocol
     ) {

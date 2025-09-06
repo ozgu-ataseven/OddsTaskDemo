@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 final class AppFactory {
 
@@ -18,7 +17,7 @@ final class AppFactory {
 
     // MARK: - Private helpers (her çağrıda yeni instance)
     private func makeLoginFactory(router: RouterProtocol) -> LoginFactory {
-        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let auth: FirebaseAuthServiceProtocol = dependencyContainer.resolve()
         let analytics: AnalyticsServiceProtocol = dependencyContainer.resolve()
         return LoginFactory(
             authService: auth,
@@ -28,7 +27,7 @@ final class AppFactory {
     }
 
     private func makeRegisterFactory(router: RouterProtocol) -> RegisterFactory {
-        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let auth: FirebaseAuthServiceProtocol = dependencyContainer.resolve()
         return RegisterFactory(
             authService: auth,
             router: router
@@ -37,7 +36,7 @@ final class AppFactory {
 
     private func makeSportListFactory(router: RouterProtocol) -> SportListFactory {
         let api: OddsAPIServiceProtocol = dependencyContainer.resolve()
-        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let auth: FirebaseAuthServiceProtocol = dependencyContainer.resolve()
         return SportListFactory(
             apiService: api,
             authService: auth,
@@ -55,7 +54,7 @@ final class AppFactory {
 
     private func makeOddEventDetailFactory(router: RouterProtocol) -> OddEventDetailFactory {
         let api: OddsAPIServiceProtocol = dependencyContainer.resolve()
-        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let auth: FirebaseAuthServiceProtocol = dependencyContainer.resolve()
         let basket: BasketServiceProtocol = dependencyContainer.resolve()
         return OddEventDetailFactory(
             apiService: api,
@@ -66,7 +65,7 @@ final class AppFactory {
     }
 
     private func makeBasketFactory(router: RouterProtocol) -> BasketFactory {
-        let auth: AuthenticationServiceProtocol = dependencyContainer.resolve()
+        let auth: FirebaseAuthServiceProtocol = dependencyContainer.resolve()
         let basket: BasketServiceProtocol = dependencyContainer.resolve()
         return BasketFactory(
             authService: auth,
@@ -76,13 +75,6 @@ final class AppFactory {
     }
 
     // MARK: - ViewController builders (transient)
-    func initialViewController(router: RouterProtocol) -> UIViewController {
-        if Auth.auth().currentUser != nil {
-            return makeSportListFactory(router: router).makeSportListViewController()
-        } else {
-            return makeLoginFactory(router: router).makeLoginViewController()
-        }
-    }
 
     func loginViewController(router: RouterProtocol) -> UIViewController {
         makeLoginFactory(router: router).makeLoginViewController()

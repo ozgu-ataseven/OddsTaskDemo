@@ -13,7 +13,7 @@ final class BasketViewModel: BasketViewModelProtocol {
     @Published private var isLoading: Bool = false
     
     private let basketService: BasketServiceProtocol
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     
     // MARK: - Subjects
     private let itemsSubject = CurrentValueSubject<[BasketItem], Never>([])
@@ -47,7 +47,7 @@ final class BasketViewModel: BasketViewModelProtocol {
     
     // MARK: - Init
     init(
-        authService: AuthenticationServiceProtocol,
+        authService: FirebaseAuthServiceProtocol,
         basketService: BasketServiceProtocol
     ) {
         self.basketService = basketService

@@ -12,10 +12,10 @@ protocol RegisterFactoryProtocol {
 }
 
 final class RegisterFactory: RegisterFactoryProtocol {
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private unowned let router: RouterProtocol
 
-    init(authService: AuthenticationServiceProtocol, router: RouterProtocol) {
+    init(authService: FirebaseAuthServiceProtocol, router: RouterProtocol) {
         self.authService = authService
         self.router = router
     }

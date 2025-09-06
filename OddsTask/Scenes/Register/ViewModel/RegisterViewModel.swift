@@ -10,7 +10,7 @@ import Combine
 
 final class RegisterViewModel: RegisterViewModelProtocol {
     
-    private let authService: AuthenticationServiceProtocol
+    private let authService: FirebaseAuthServiceProtocol
     private let routeSportListSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Public Properties
@@ -63,7 +63,7 @@ final class RegisterViewModel: RegisterViewModelProtocol {
 
     // MARK: - Initialization
     
-    init(authService: AuthenticationServiceProtocol) {
+    init(authService: FirebaseAuthServiceProtocol) {
         self.authService = authService
         setupValidation()
     }
