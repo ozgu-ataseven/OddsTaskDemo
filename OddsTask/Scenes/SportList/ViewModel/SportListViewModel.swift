@@ -59,7 +59,7 @@ final class SportListViewModel: SportListViewModelProtocol {
             .sink { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
-                    self?.alert = Alert(title: "general_error".localized, message: error.localizedDescription, actions: [.init(title: "general_done".localized)])
+                    self?.alert = Alert(title: error.title, message: error.userMessage, actions: [.init(title: "general_done".localized)])
                 }
             } receiveValue: { [weak self] sports in
                 self?.sports = sports

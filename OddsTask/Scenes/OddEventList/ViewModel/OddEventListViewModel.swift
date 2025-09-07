@@ -61,7 +61,7 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
                 if case let .failure(error) = completion {
-                    self?.alertSubject.send(Alert(title: "Hata", message: error.localizedDescription, actions: [.init(title: "Tamam")]))
+                    self?.alertSubject.send(Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")]))
                 }
             }, receiveValue: { [weak self] odd in
                 guard let self else { return }

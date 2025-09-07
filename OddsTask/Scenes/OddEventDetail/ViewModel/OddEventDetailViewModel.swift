@@ -64,7 +64,7 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
             .sink { [weak self] completion in
                 self?.loadingSubject.send(false)
                 if case .failure(let error) = completion {
-                    self?.alertSubject.send(Alert(title: "general_error".localized, message: error.localizedDescription, actions: [.init(title: "general_done".localized)]))
+                    self?.alertSubject.send(Alert(title: error.title, message: error.userMessage, actions: [.init(title: "general_done".localized)]))
                 }
             } receiveValue: { [weak self] detail in
                 guard let self else { return }

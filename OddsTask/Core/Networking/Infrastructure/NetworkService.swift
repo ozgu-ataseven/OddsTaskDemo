@@ -85,7 +85,68 @@ final class NetworkService: NetworkServiceProtocol {
         }
         .publishDecodable(type: T.self)
         .value()
-        .mapError { NetworkError.serverError(message: $0.localizedDescription) }
+        .mapError { [weak self] error in
+            self?.mapAlamofireError(error) ?? NetworkError.unknownError(error.localizedDescription)
+        }
         .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Private Methods
+    private func mapAlamofireError(_ error: Error) -> NetworkError {
+        if let afError = error as? AFError {
+            switch afError {
+            case .sessionTaskFailed(let error):
+                if let urlError = error as? URLError {
+                    switch urlError.code {
+                    case .notConnectedToInternet:
+                        return .noInternetConnection
+                    case .timedOut:
+                        return .requestTimeout
+                    case .cannotFindHost, .cannotConnectToHost:
+                        return .networkUnavailable
+                    default:
+                        return .unknownError(urlError.localizedDescription)
+                    }
+                }
+                return .unknownError(error.localizedDescription)
+                
+            case .responseValidationFailed(let reason):
+                switch reason {
+                case .unacceptableStatusCode(let code):
+                    return mapHTTPStatusCode(code, message: "HTTP \(code)")
+                default:
+                    return .invalidResponse
+                }
+                
+            case .responseSerializationFailed:
+                return .decodingError
+                
+            case .invalidURL:
+                return .invalidURL
+                
+            default:
+                return .unknownError(afError.localizedDescription)
+            }
+        }
+        
+        // Handle DecodingError specifically
+        if error is DecodingError {
+            return .decodingError
+        }
+        
+        return .unknownError(error.localizedDescription)
+    }
+    
+    private func mapHTTPStatusCode(_ statusCode: Int, message: String) -> NetworkError {
+        switch statusCode {
+        case 400...499:
+            // Client errors
+            return .serverError(statusCode: statusCode, message: "İstek hatası (\(statusCode))")
+        case 500...599:
+            // Server errors
+            return .serverError(statusCode: statusCode, message: "Sunucu hatası (\(statusCode))")
+        default:
+            return .serverError(statusCode: statusCode, message: message)
+        }
     }
 }
