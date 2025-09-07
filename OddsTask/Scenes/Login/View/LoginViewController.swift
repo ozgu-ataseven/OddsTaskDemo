@@ -96,6 +96,7 @@ final class LoginViewController: BaseViewController<LoginView> {
             .store(in: &cancellables)
         
         viewModel.loadingPublisher
+            .dropFirst()
             .receive(on: RunLoop.main)
             .sink { [weak self] isLoading in
                 guard let self else { return }
