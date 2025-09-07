@@ -13,15 +13,14 @@ final class SportListViewModel: SportListViewModelProtocol {
     private let service: OddsAPIServiceProtocol
     private let authService: FirebaseAuthServiceProtocol
     private let searchFilter: SportsSearchFiltering
+    weak var coordinatorDelegate: SportListViewModelCoordinatorDelegate?
     private var cancellables = Set<AnyCancellable>()
-    private let routeLoginSubject = PassthroughSubject<Void, Never>()
     
     @Published private var sports: [Sport] = []
     @Published private var isLoading: Bool = false
     @Published private var alert: Alert?
     @Published var searchText: String = ""
     @Published private(set) var filteredSports: [Sport] = []
-    @Published private var selectedSportKey: String? = nil
     
     var sportsPublisher: AnyPublisher<[Sport], Never> {
         $filteredSports.eraseToAnyPublisher()
@@ -33,16 +32,6 @@ final class SportListViewModel: SportListViewModelProtocol {
     
     var alertPublisher: AnyPublisher<Alert, Never> {
         $alert.compactMap { $0 }.eraseToAnyPublisher()
-    }
-    
-    var routeEventListPublisher: AnyPublisher<String, Never> {
-        $selectedSportKey
-            .compactMap { $0 }
-            .eraseToAnyPublisher()
-    }
-    
-    var routeLoginPublisher: AnyPublisher<Void, Never> {
-        routeLoginSubject.eraseToAnyPublisher()
     }
     
     init(apiService: OddsAPIServiceProtocol, authService: FirebaseAuthServiceProtocol, searchFilter: SportsSearchFiltering) {
@@ -68,13 +57,13 @@ final class SportListViewModel: SportListViewModelProtocol {
     }
     
     func didSelectSport(_ sport: Sport) {
-        selectedSportKey = sport.key
+        coordinatorDelegate?.sportListViewModelDidSelectSport(sportKey: sport.key)
     }
     
     func logout() {
         switch authService.signOut() {
         case .success:
-            routeLoginSubject.send()
+            coordinatorDelegate?.sportListViewModelDidRequestLogout()
         case .failure(let error):
             self.alert = Alert(
                 title: "Çıkış Başarısız",
@@ -82,6 +71,10 @@ final class SportListViewModel: SportListViewModelProtocol {
                 actions: [.init(title: "Tamam")]
             )
         }
+    }
+    
+    func basketTapped() {
+        coordinatorDelegate?.sportListViewModelDidRequestBasket()
     }
     
     // MARK: - Private Methods

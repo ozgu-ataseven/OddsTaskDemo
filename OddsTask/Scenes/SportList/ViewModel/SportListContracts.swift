@@ -8,15 +8,27 @@
 import Foundation
 import Combine
 
+// MARK: - Coordinator Delegate Protocol
+
+protocol SportListViewModelCoordinatorDelegate: AnyObject {
+    func sportListViewModelDidSelectSport(sportKey: String)
+    func sportListViewModelDidRequestLogout()
+    func sportListViewModelDidRequestBasket()
+}
+
+// MARK: - ViewModel Protocol
+
 protocol SportListViewModelProtocol: AnyObject {
     var sportsPublisher: AnyPublisher<[Sport], Never> { get }
     var loadingPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<Alert, Never> { get }
-    var routeEventListPublisher: AnyPublisher<String, Never> { get }
-    var routeLoginPublisher: AnyPublisher<Void, Never> { get }
     var searchText: String { get set }
+    
+    // MARK: - Coordinator Delegate
+    var coordinatorDelegate: SportListViewModelCoordinatorDelegate? { get set }
     
     func fetchSports()
     func didSelectSport(_ sport: Sport)
     func logout()
+    func basketTapped()
 }

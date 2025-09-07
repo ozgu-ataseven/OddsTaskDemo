@@ -11,12 +11,10 @@ import Combine
 final class OddEventListViewController: BaseViewController<OddEventListView> {
 
     private let viewModel: OddEventListViewModelProtocol
-    private unowned let router: RouterProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: OddEventListViewModelProtocol, router: RouterProtocol) {
+    init(viewModel: OddEventListViewModelProtocol) {
         self.viewModel = viewModel
-        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -57,16 +55,6 @@ final class OddEventListViewController: BaseViewController<OddEventListView> {
             .store(in: &cancellables)
         
         
-        viewModel.routePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] sportKey, eventId  in
-                guard let self else { return }
-                router.push(.oddEventDetail(
-                    sportKey: sportKey,
-                    eventId: eventId
-                ), from: self, animated: true)
-            }
-            .store(in: &cancellables)
     }
     
     private func bindView() {

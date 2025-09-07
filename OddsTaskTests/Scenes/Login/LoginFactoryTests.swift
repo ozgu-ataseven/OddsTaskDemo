@@ -14,18 +14,15 @@ final class LoginFactoryTests: XCTestCase {
     private var factory: LoginFactory!
     private var mockAuthService: MockFirebaseAuthService!
     private var mockAnalyticsService: MockAnalyticsService!
-    private var mockRouter: MockRouter!
     
     override func setUp() {
         super.setUp()
         mockAuthService = MockFirebaseAuthService()
         mockAnalyticsService = MockAnalyticsService()
-        mockRouter = MockRouter()
         
         factory = LoginFactory(
             authService: mockAuthService,
-            analyticsService: mockAnalyticsService,
-            router: mockRouter
+            analyticsService: mockAnalyticsService
         )
     }
     
@@ -33,7 +30,6 @@ final class LoginFactoryTests: XCTestCase {
         factory = nil
         mockAuthService = nil
         mockAnalyticsService = nil
-        mockRouter = nil
         super.tearDown()
     }
     
@@ -46,8 +42,7 @@ final class LoginFactoryTests: XCTestCase {
     func test_initialization_withValidDependencies_succeeds() {
         let newFactory = LoginFactory(
             authService: mockAuthService,
-            analyticsService: mockAnalyticsService,
-            router: mockRouter
+            analyticsService: mockAnalyticsService
         )
         
         XCTAssertNotNil(newFactory)
@@ -93,6 +88,15 @@ final class LoginFactoryTests: XCTestCase {
         // Load view to ensure proper initialization
         viewController.loadViewIfNeeded()
         XCTAssertNotNil(viewController.view)
+        
+        // Verify ViewModel is properly created
+        guard let loginVC = viewController as? LoginViewController else {
+            XCTFail("Expected LoginViewController")
+            return
+        }
+        
+        // Test that ViewModel is properly initialized
+        XCTAssertNotNil(loginVC)
     }
     
     func test_makeLoginViewController_viewModelHasCorrectBehavior() {

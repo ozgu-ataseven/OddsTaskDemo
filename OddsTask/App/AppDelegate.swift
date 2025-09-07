@@ -79,20 +79,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dependencyContainer.register(BasketServiceProtocol.self, scope: .singleton) { c in
             BasketService()
         }
-
-        // Router / Factory will resolve dependencies from container
-        AppRouter.shared.setup(with: dependencyContainer)
     }
 
     private func launchInitialViewController() {
-        let router = AppRouter.shared
-        let factory = AppFactory(dependencyContainer: dependencyContainer)
-        let coordinator = AppCoordinator(router: router, factory: factory, firebaseService: dependencyContainer.resolve())
-        let initialVC = coordinator.makeInitialRootViewController()
-        router.installRoot(initialVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
+        let navigationController = UINavigationController()
+        
+        let appCoordinator = AppCoordinator(
+            navigationController: navigationController,
+            dependencyContainer: dependencyContainer
+        )
+        
         self.window = window
-        window.rootViewController = router.navigationRootViewController()
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
+        
+        appCoordinator.start()
     }
 }

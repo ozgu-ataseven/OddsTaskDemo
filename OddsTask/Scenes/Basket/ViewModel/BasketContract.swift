@@ -20,6 +20,13 @@ protocol BasketViewModelProtocol {
     func fetchBasketItems()
     func removeItem(withId id: String)
     func clearBasket()
+    func dismissModal()
+}
+
+// MARK: - Coordinator Delegate Protocol
+
+protocol BasketViewModelCoordinatorDelegate: AnyObject {
+    func basketViewModelDidRequestClose()
 }
 
 // MARK: - View Protocol

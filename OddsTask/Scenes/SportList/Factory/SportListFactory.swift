@@ -14,12 +14,10 @@ protocol SportListFactoryProtocol {
 final class SportListFactory: SportListFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
     private let authService: FirebaseAuthServiceProtocol
-    private unowned let router: RouterProtocol
 
-    init(apiService: OddsAPIServiceProtocol, authService: FirebaseAuthServiceProtocol, router: RouterProtocol) {
+    init(apiService: OddsAPIServiceProtocol, authService: FirebaseAuthServiceProtocol) {
         self.apiService = apiService
         self.authService = authService
-        self.router = router
     }
 
     func makeSportListViewController() -> UIViewController {
@@ -28,7 +26,7 @@ final class SportListFactory: SportListFactoryProtocol {
             authService: authService,
             searchFilter: ContainsSportsSearchFiltering()
         )
-        let viewController = SportListViewController(viewModel: viewModel, router: router)
+        let viewController = SportListViewController(viewModel: viewModel)
         return viewController
     }
 }

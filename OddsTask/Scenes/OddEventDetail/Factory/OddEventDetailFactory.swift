@@ -15,18 +15,15 @@ final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
     private let authService: FirebaseAuthServiceProtocol
     private let basketService: BasketServiceProtocol
-    private unowned let router: RouterProtocol
 
     init(
         apiService: OddsAPIServiceProtocol,
         authService: FirebaseAuthServiceProtocol,
-        basketService: BasketServiceProtocol,
-        router: RouterProtocol
+        basketService: BasketServiceProtocol
     ) {
         self.apiService = apiService
         self.authService = authService
         self.basketService = basketService
-        self.router = router
     }
 
     func makeOddEventDetailViewController(
@@ -40,7 +37,7 @@ final class OddEventDetailFactory: OddEventDetailFactoryProtocol {
             sportKey: sportKey,
             eventId: eventId
         )
-        let viewController = OddEventDetailViewController(viewModel: viewModel, router: router)
+        let viewController = OddEventDetailViewController(viewModel: viewModel)
         return viewController
     }
 }

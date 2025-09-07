@@ -11,12 +11,10 @@ import Combine
 final class SportListViewController: BaseViewController<SportListView> {
 
     private let viewModel: SportListViewModelProtocol
-    private unowned let router: RouterProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: SportListViewModelProtocol, router: RouterProtocol) {
+    init(viewModel: SportListViewModelProtocol) {
         self.viewModel = viewModel
-        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -50,7 +48,7 @@ final class SportListViewController: BaseViewController<SportListView> {
     }
 
     @objc private func basketTapped() {
-        router.present(.basket, from: self, animated: true)
+        viewModel.basketTapped()
     }
 
     @objc private func logoutTapped() {
@@ -82,20 +80,6 @@ final class SportListViewController: BaseViewController<SportListView> {
             .store(in: &cancellables)
         
         
-        viewModel.routeEventListPublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] sportKey in
-                guard let self else { return }
-                router.push(.oddEventList(sportKey: sportKey), from: self, animated: true)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.routeLoginPublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] in
-                self?.router.setRoot(for: .login, animated: true)
-            }
-            .store(in: &cancellables)
     }
     
     private func bindView() {

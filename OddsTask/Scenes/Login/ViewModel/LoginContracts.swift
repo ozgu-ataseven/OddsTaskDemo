@@ -7,6 +7,15 @@
 
 import Combine
 
+// MARK: - Coordinator Delegate Protocol
+
+protocol LoginViewModelCoordinatorDelegate: AnyObject {
+    func loginViewModelDidFinishLogin()
+    func loginViewModelDidRequestRegister()
+}
+
+// MARK: - ViewModel Protocol
+
 protocol LoginViewModelProtocol: AnyObject {
 
     // MARK: - Inputs
@@ -19,7 +28,9 @@ protocol LoginViewModelProtocol: AnyObject {
     var isFormValidPublisher: AnyPublisher<Bool, Never> { get }
     var loadingPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<Alert, Never> { get }
-    var routeSportListPublisher: AnyPublisher<Void, Never> { get }
+    
+    // MARK: - Coordinator Delegate
+    var coordinatorDelegate: LoginViewModelCoordinatorDelegate? { get set }
 
     // MARK: - Actions
     func login()

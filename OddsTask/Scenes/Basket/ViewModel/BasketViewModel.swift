@@ -14,6 +14,7 @@ final class BasketViewModel: BasketViewModelProtocol {
     
     private let basketService: BasketServiceProtocol
     private let authService: FirebaseAuthServiceProtocol
+    weak var coordinatorDelegate: BasketViewModelCoordinatorDelegate?
     
     // MARK: - Subjects
     private let itemsSubject = CurrentValueSubject<[BasketItem], Never>([])
@@ -116,6 +117,10 @@ final class BasketViewModel: BasketViewModelProtocol {
                 self.alertSubject.send(alert)
             }
         }
+    }
+    
+    func dismissModal() {
+        coordinatorDelegate?.basketViewModelDidRequestClose()
     }
     
     // MARK: - Helpers

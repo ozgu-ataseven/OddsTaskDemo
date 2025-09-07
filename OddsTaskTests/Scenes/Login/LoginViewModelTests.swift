@@ -169,15 +169,13 @@ final class LoginViewModelTests: XCTestCase {
     
     // MARK: - Login Tests
     
-    func test_login_success_navigatesToSportList() {
+    func test_login_success_callsCoordinatorDelegate() {
         let expectation = XCTestExpectation(description: "Login success")
         mockContainer.mockFirebaseAuthService?.shouldSucceed = true
         
-        viewModel.routeSportListPublisher
-            .sink { _ in
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let mockDelegate = MockLoginViewModelCoordinatorDelegate()
+        mockDelegate.loginFinishedExpectation = expectation
+        viewModel.coordinatorDelegate = mockDelegate
         
         viewModel.email = "test@example.com"
         viewModel.password = "ValidPass123"
@@ -252,5 +250,20 @@ final class LoginViewModelTests: XCTestCase {
         // Analytics event'inin log'landığını kontrol et
         let analyticsService = mockContainer.mockAnalyticsService
         XCTAssertTrue(analyticsService?.loggedEvents.contains { $0.name == AnalyticsEvent.Action.registerTapped } ?? false)
+    }
+}
+
+// MARK: - Mock Coordinator Delegate
+
+class MockLoginViewModelCoordinatorDelegate: LoginViewModelCoordinatorDelegate {
+    var loginFinishedExpectation: XCTestExpectation?
+    var registerRequestedExpectation: XCTestExpectation?
+    
+    func loginViewModelDidFinishLogin() {
+        loginFinishedExpectation?.fulfill()
+    }
+    
+    func loginViewModelDidRequestRegister() {
+        registerRequestedExpectation?.fulfill()
     }
 }

@@ -13,16 +13,14 @@ protocol RegisterFactoryProtocol {
 
 final class RegisterFactory: RegisterFactoryProtocol {
     private let authService: FirebaseAuthServiceProtocol
-    private unowned let router: RouterProtocol
 
-    init(authService: FirebaseAuthServiceProtocol, router: RouterProtocol) {
+    init(authService: FirebaseAuthServiceProtocol) {
         self.authService = authService
-        self.router = router
     }
 
     func makeRegisterViewController() -> UIViewController {
         let viewModel = RegisterViewModel(authService: authService)
-        let viewController = RegisterViewController(viewModel: viewModel, router: router)
+        let viewController = RegisterViewController(viewModel: viewModel)
         return viewController
     }
 }

@@ -14,7 +14,7 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
     private let detailSubject = PassthroughSubject<OddEventDetail, Never>()
     private let loadingSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<Alert, Never>()
-    private let basketRouteSubject = PassthroughSubject<Void, Never>()
+    weak var coordinatorDelegate: OddEventDetailViewModelCoordinatorDelegate?
     
     var sportKey: String
     var eventId: String
@@ -31,10 +31,6 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
         alertSubject.eraseToAnyPublisher()
     }
     
-    var basketRoutePublisher: AnyPublisher<Void, Never> {
-        basketRouteSubject.eraseToAnyPublisher()
-    }
-
     // MARK: - Dependencies
     private let service: OddsAPIServiceProtocol
     private let basketService: BasketServiceProtocol
@@ -83,7 +79,7 @@ final class OddEventDetailViewModel: OddEventDetailViewModelProtocol {
             self?.loadingSubject.send(false)
             switch result {
             case .success:
-                self?.basketRouteSubject.send(())
+                self?.coordinatorDelegate?.oddEventDetailViewModelDidAddToBasket()
             case .failure(let error):
                 self?.alertSubject.send(Alert(title: error.title, message: error.userMessage, actions: [.init(title: "Tamam")]))
             }

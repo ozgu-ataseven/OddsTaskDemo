@@ -11,8 +11,7 @@ import Combine
 final class RegisterViewModel: RegisterViewModelProtocol {
     
     private let authService: FirebaseAuthServiceProtocol
-    private let routeSportListSubject = PassthroughSubject<Void, Never>()
-    private let routeLoginSubject = PassthroughSubject<Void, Never>()
+    weak var coordinatorDelegate: RegisterViewModelCoordinatorDelegate?
     
     // MARK: - Public Properties
     @Published var name: String = ""
@@ -48,13 +47,6 @@ final class RegisterViewModel: RegisterViewModelProtocol {
         $isFormValid.eraseToAnyPublisher()
     }
     
-    var routeSportListPublisher: AnyPublisher<Void, Never> {
-        routeSportListSubject.eraseToAnyPublisher()
-    }
-    
-    var routeLoginPublisher: AnyPublisher<Void, Never> {
-        routeLoginSubject.eraseToAnyPublisher()
-    }
     
     var loadingPublisher: AnyPublisher<Bool, Never> {
         $isLoading.eraseToAnyPublisher()
@@ -82,7 +74,7 @@ final class RegisterViewModel: RegisterViewModelProtocol {
             
             switch result {
             case .success:
-                self?.routeSportListSubject.send()
+                self?.coordinatorDelegate?.registerViewModelDidFinishRegistration()
             case .failure(let authError):
                 switch authError {
                 case .emailAlreadyInUse:
@@ -91,7 +83,7 @@ final class RegisterViewModel: RegisterViewModelProtocol {
                         message: "Bu email adresi zaten kayıtlı. Giriş yapmak ister misiniz?",
                         actions: [
                             .init(title: "Giriş Yap", action: { [weak self] in
-                                self?.routeLoginSubject.send()
+                                self?.coordinatorDelegate?.registerViewModelDidRequestLogin()
                                 return nil
                             }()),
                             .init(title: "İptal", style: .cancel)

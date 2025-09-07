@@ -7,22 +7,64 @@
 
 import UIKit
 
-final class AppCoordinator {
-    private let router: RouterProtocol
-    private let factory: AppFactory
+final class AppCoordinator: BaseCoordinator {
+    private let dependencyContainer: DependencyContainer
     private let firebaseService: FirebaseAuthServiceProtocol
+    private var currentCoordinator: CoordinatorProtocol?
 
-    init(router: RouterProtocol, factory: AppFactory, firebaseService: FirebaseAuthServiceProtocol) {
-        self.router = router
-        self.factory = factory
-        self.firebaseService = firebaseService
+    init(navigationController: UINavigationController, dependencyContainer: DependencyContainer) {
+        self.dependencyContainer = dependencyContainer
+        self.firebaseService = dependencyContainer.resolve(FirebaseAuthServiceProtocol.self)
+        super.init(navigationController: navigationController)
     }
     
-    func makeInitialRootViewController() -> UIViewController {
+    override func start() {
         if firebaseService.isLoggedIn() {
-            return factory.sportListViewController(router: router)
+            showMainFlow()
         } else {
-            return factory.loginViewController(router: router)
+            showAuthFlow()
         }
+    }
+    
+    // MARK: - Navigation Methods
+    
+    private func showAuthFlow() {
+        let loginCoordinator = LoginCoordinator(
+            navigationController: navigationController,
+            dependencyContainer: dependencyContainer
+        )
+        loginCoordinator.delegate = self
+        addChild(loginCoordinator)
+        currentCoordinator = loginCoordinator
+        loginCoordinator.start()
+    }
+    
+    private func showMainFlow() {
+        let sportListCoordinator = SportListCoordinator(
+            navigationController: navigationController,
+            dependencyContainer: dependencyContainer
+        )
+        sportListCoordinator.delegate = self
+        addChild(sportListCoordinator)
+        currentCoordinator = sportListCoordinator
+        sportListCoordinator.start()
+    }
+}
+
+// MARK: - LoginCoordinatorDelegate
+
+extension AppCoordinator: LoginCoordinatorDelegate {
+    func loginCoordinatorDidFinishLogin(_ coordinator: LoginCoordinator) {
+        removeChild(coordinator)
+        showMainFlow()
+    }
+}
+
+// MARK: - SportListCoordinatorDelegate
+
+extension AppCoordinator: SportListCoordinatorDelegate {
+    func sportListCoordinatorDidLogout(_ coordinator: SportListCoordinator) {
+        removeChild(coordinator)
+        showAuthFlow()
     }
 }

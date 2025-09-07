@@ -14,17 +14,15 @@ protocol LoginFactoryProtocol {
 final class LoginFactory: LoginFactoryProtocol {
     private let authService: FirebaseAuthServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
-    private unowned let router: RouterProtocol
 
-    init(authService: FirebaseAuthServiceProtocol, analyticsService: AnalyticsServiceProtocol, router: RouterProtocol) {
+    init(authService: FirebaseAuthServiceProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.authService = authService
         self.analyticsService = analyticsService
-        self.router = router
     }
 
     func makeLoginViewController() -> UIViewController {
         let viewModel = LoginViewModel(authService: authService, analyticsService: analyticsService)
-        let viewController = LoginViewController(viewModel: viewModel, router: router)
+        let viewController = LoginViewController(viewModel: viewModel)
         return viewController
     }
 }

@@ -234,34 +234,6 @@ final class MockNetworkService: NetworkServiceProtocol {
     }
 }
 
-// MARK: - Mock Router
-
-final class MockRouter: RouterProtocol {
-    var pushedRoutes: [Route] = []
-    var presentedRoutes: [Route] = []
-    var dismissedCount: Int = 0
-    var poppedCount: Int = 0
-    
-    func push(_ route: Route, from source: UIViewController, animated: Bool) {
-        pushedRoutes.append(route)
-    }
-    
-    func present(_ route: Route, from source: UIViewController, animated: Bool) {
-        presentedRoutes.append(route)
-    }
-    
-    func setRoot(for route: Route, animated: Bool) {
-        pushedRoutes = [route]
-    }
-    
-    func dismiss(animated: Bool) {
-        dismissedCount += 1
-    }
-    
-    func pop(animated: Bool) {
-        poppedCount += 1
-    }
-}
 
 // MARK: - DependencyContainer Extension
 

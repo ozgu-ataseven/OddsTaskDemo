@@ -12,6 +12,7 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
     // MARK: - Publishers
     @Published private var odds: [OddEvent] = []
     @Published var searchText: String = ""
+    weak var coordinatorDelegate: OddEventListViewModelCoordinatorDelegate?
     
     var oddEventsPublisher: AnyPublisher<[OddEvent], Never> {
         $filteredOdds.eraseToAnyPublisher()
@@ -25,14 +26,8 @@ final class OddEventListViewModel: OddEventListViewModelProtocol {
         alertSubject.eraseToAnyPublisher()
     }
     
-    private let routeSubject = PassthroughSubject<(sportKey: String, eventId: String), Never>()
-
-    var routePublisher: AnyPublisher<(sportKey: String, eventId: String), Never> {
-        routeSubject.eraseToAnyPublisher()
-    }
-    
     func didSelectEvent(_ event: OddEvent) {
-        routeSubject.send((sportKey: event.sportKey, eventId: event.id))
+        coordinatorDelegate?.oddEventListViewModelDidSelectEvent(sportKey: event.sportKey, eventId: event.id)
     }
 
     // MARK: - Dependencies

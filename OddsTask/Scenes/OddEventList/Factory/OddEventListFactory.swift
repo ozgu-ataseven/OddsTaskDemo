@@ -13,11 +13,9 @@ protocol OddEventListFactoryProtocol {
 
 final class OddEventListFactory: OddEventListFactoryProtocol {
     private let apiService: OddsAPIServiceProtocol
-    private unowned let router: RouterProtocol
 
-    init(apiService: OddsAPIServiceProtocol, router: RouterProtocol) {
+    init(apiService: OddsAPIServiceProtocol) {
         self.apiService = apiService
-        self.router = router
     }
 
     func makeOddEventListViewController(sportKey: String) -> UIViewController {
@@ -26,7 +24,7 @@ final class OddEventListFactory: OddEventListFactoryProtocol {
             sportKey: sportKey,
             searchFilter: ContainsOddsSearchFiltering()
         )
-        let viewController = OddEventListViewController(viewModel: viewModel, router: router)
+        let viewController = OddEventListViewController(viewModel: viewModel)
         return viewController
     }
 }

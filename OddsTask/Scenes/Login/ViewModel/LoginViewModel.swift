@@ -9,10 +9,10 @@ import Foundation
 import Combine
 
 final class LoginViewModel: LoginViewModelProtocol {
-
+    
     private let authService: FirebaseAuthServiceProtocol
+    weak var coordinatorDelegate: LoginViewModelCoordinatorDelegate?
     private let analyticsService: AnalyticsServiceProtocol
-    private let routeSportListSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Public Properties
     @Published var email: String = ""
@@ -25,9 +25,6 @@ final class LoginViewModel: LoginViewModelProtocol {
     @Published private var isLoading: Bool = false
     @Published private var alert: Alert?
     
-    var routeSportListPublisher: AnyPublisher<Void, Never> {
-        routeSportListSubject.eraseToAnyPublisher()
-    }
 
     // MARK: - LoginViewModelProtocol Publishers
     var emailValidationMessagePublisher: AnyPublisher<String?, Never> {
@@ -78,7 +75,7 @@ final class LoginViewModel: LoginViewModelProtocol {
             self?.isLoading = false
             switch result {
             case .success:
-                self?.routeSportListSubject.send()
+                self?.coordinatorDelegate?.loginViewModelDidFinishLogin()
             case .failure(let authError):
                 self?.alert = Alert(
                     title: authError.title,
@@ -91,6 +88,7 @@ final class LoginViewModel: LoginViewModelProtocol {
     
     func registerTapped() {
         analyticsService.logEvent(name: AnalyticsEvent.Action.registerTapped, parameters: nil)
+        coordinatorDelegate?.loginViewModelDidRequestRegister()
     }
 
     // MARK: - Private Methods

@@ -14,17 +14,15 @@ protocol BasketFactoryProtocol {
 final class BasketFactory: BasketFactoryProtocol {
     private let authService: FirebaseAuthServiceProtocol
     private let basketService: BasketServiceProtocol
-    private unowned let router: RouterProtocol
 
-    init(authService: FirebaseAuthServiceProtocol, basketService: BasketServiceProtocol, router: RouterProtocol) {
+    init(authService: FirebaseAuthServiceProtocol, basketService: BasketServiceProtocol) {
         self.authService = authService
         self.basketService = basketService
-        self.router = router
     }
 
     func makeBasketViewController() -> UIViewController {
         let viewModel = BasketViewModel(authService: authService, basketService: basketService)
-        let viewController = BasketViewController(viewModel: viewModel, router: router)
+        let viewController = BasketViewController(viewModel: viewModel)
         return viewController
     }
 }

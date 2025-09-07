@@ -14,14 +14,12 @@ final class LoginViewControllerTests: XCTestCase {
     
     private var viewController: LoginViewController!
     private var mockViewModel: MockLoginViewModel!
-    private var mockRouter: MockRouter!
     private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
         mockViewModel = MockLoginViewModel()
-        mockRouter = MockRouter()
-        viewController = LoginViewController(viewModel: mockViewModel, router: mockRouter)
+        viewController = LoginViewController(viewModel: mockViewModel)
         cancellables = []
         
         // Load the view
@@ -31,7 +29,6 @@ final class LoginViewControllerTests: XCTestCase {
     override func tearDown() {
         viewController = nil
         mockViewModel = nil
-        mockRouter = nil
         cancellables = nil
         super.tearDown()
     }
@@ -136,16 +133,14 @@ final class LoginViewControllerTests: XCTestCase {
     
     // MARK: - Navigation Tests
     
-    func test_routeSportListPublisher_triggersNavigation() {
+    func test_coordinatorDelegate_triggersNavigation() {
         let expectation = XCTestExpectation(description: "Navigation triggered")
         
-        mockViewModel.routeSportListSubject
-            .sink { _ in
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let mockDelegate = MockLoginViewModelCoordinatorDelegate()
+        mockDelegate.loginFinishedExpectation = expectation
+        mockViewModel.coordinatorDelegate = mockDelegate
         
-        mockViewModel.routeSportListSubject.send(())
+        mockDelegate.loginViewModelDidFinishLogin()
         
         wait(for: [expectation], timeout: 1.0)
     }
@@ -189,7 +184,6 @@ final class MockLoginViewModel: LoginViewModelProtocol {
     let isFormValidSubject = PassthroughSubject<Bool, Never>()
     let loadingSubject = PassthroughSubject<Bool, Never>()
     let alertSubject = PassthroughSubject<Alert, Never>()
-    let routeSportListSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Alert Tracking
     var lastAlertSent: Alert?
@@ -219,9 +213,8 @@ final class MockLoginViewModel: LoginViewModelProtocol {
             .eraseToAnyPublisher()
     }
     
-    var routeSportListPublisher: AnyPublisher<Void, Never> {
-        routeSportListSubject.eraseToAnyPublisher()
-    }
+    // MARK: - Coordinator Delegate
+    weak var coordinatorDelegate: LoginViewModelCoordinatorDelegate?
     
     // MARK: - Action Tracking
     var loginCalled = false
