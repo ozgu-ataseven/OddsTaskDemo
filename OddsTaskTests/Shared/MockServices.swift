@@ -206,33 +206,31 @@ final class MockOddsAPIService: OddsAPIServiceProtocol {
 // MARK: - Mock Network Service
 
 final class MockNetworkService: NetworkServiceProtocol {
-    enum MockResult<T> {
-        case success(T)
-        case failure(NetworkError)
-    }
+    var requestCalled = false
+    var mockResult: Result<Any, NetworkError>?
     
-    var mockResult: MockResult<Any>?
-    
-    func request<T>(endpoint: Endpoint, headers: [String: String]?) -> AnyPublisher<T, NetworkError> where T : Decodable {
-        guard let result = mockResult else {
-            return Fail(error: NetworkError.unknownError("Mock error"))
-                .eraseToAnyPublisher()
-        }
+    func request<T: Decodable>(endpoint: Endpoint, headers: [String: String]?) -> AnyPublisher<T, NetworkError> {
+        requestCalled = true
         
-        switch result {
-        case .success(let data):
-            if let typedData = data as? T {
-                return Just(typedData)
-                    .setFailureType(to: NetworkError.self)
-                    .eraseToAnyPublisher()
-            } else {
-                return Fail(error: NetworkError.invalidResponse)
+        if let result = mockResult {
+            switch result {
+            case .success(let data):
+                if let typedData = data as? T {
+                    return Just(typedData)
+                        .setFailureType(to: NetworkError.self)
+                        .eraseToAnyPublisher()
+                } else {
+                    return Fail(error: NetworkError.decodingError)
+                        .eraseToAnyPublisher()
+                }
+            case .failure(let error):
+                return Fail(error: error)
                     .eraseToAnyPublisher()
             }
-        case .failure(let error):
-            return Fail(error: error)
-                .eraseToAnyPublisher()
         }
+        
+        return Fail(error: NetworkError.unknownError("No mock result set"))
+            .eraseToAnyPublisher()
     }
 }
 
