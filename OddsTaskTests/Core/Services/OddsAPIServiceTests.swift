@@ -41,8 +41,8 @@ final class OddsAPIServiceTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Get all sports")
         
         let mockSports = [
-            Sport(key: "soccer", group: "Soccer", title: "Soccer", active: true),
-            Sport(key: "basketball", group: "Basketball", title: "Basketball", active: true)
+            Sport(key: "soccer", group: .soccer, title: "Soccer", active: true),
+            Sport(key: "basketball", group: .basketball, title: "Basketball", active: true)
         ]
         mockNetworkService.mockResult = .success(mockSports)
         

@@ -198,8 +198,8 @@ final class MockOddsAPIService: OddsAPIServiceProtocol {
     }
     
     private var mockSports: [Sport] = [
-        Sport(key: "football", group: "American Football", title: "NFL", active: true),
-        Sport(key: "basketball", group: "Basketball", title: "NBA", active: true)
+        Sport(key: "football", group: .americanFootball, title: "NFL", active: true),
+        Sport(key: "basketball", group: .basketball, title: "NBA", active: true)
     ]
 }
 
